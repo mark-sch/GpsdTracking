@@ -1,0 +1,36 @@
+{
+  "name" : "gpsdtracking",
+  "description" : "GpsdTracking is an opensource server for various GPS tracking devices. \nMain features are:\n - multiple storage backends: MySql, FlatFile, etc..\n - multiple tracking devices/protocols gps103,traccar,nmea, ....\n - provides a <telnet> console for remote suppervision\n - provide a GpsSimulator to simulate NMEA devices from a GPX file\n\nGpsdTracking is written in node.js",
+  "version" : "0.1.4",
+  "main" : "./lib/GpsdDaemon.js",
+  "author" : {
+    "name" : "Fulup Ar Foll",
+    "email" : "fulup@fridu.net",
+    "url" : "http://www.fridu.org/fulup"
+  },
+  "keywords" : [ "gpsd", "tracker", "nmea", "gpx", "gps103", "tk102" ],
+  "licenses" : {
+    "type" : "apache20"
+  },
+  "bin" : {
+    "GpsTrackerSimulator" : "./apps/GpsTrackerSimulator.js"
+  },
+  "dependencies" : {
+    "async" : "*",
+    "traceback" : "*",
+    "jison" : "*",
+    "mysql" : "*",
+    "sgeo" : "*",
+    "xml2js" : "*"
+  },
+  "repository" : {
+    "type" : "git",
+    "url" : "git://github.com/fulup-bzh/GpsdTracking.git"
+  },
+  "bugs" : {
+    "url" : "http://github.com/fulup-bzh/GpsdTracking/issues"
+  },
+  "license" : {
+    "type" : "apache20"
+  }
+}

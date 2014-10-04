@@ -20,19 +20,19 @@ GpsDaemon = require("../lib/GpsdDaemon");
 
 // Sample of FlatFile Backend
 var FileSample = {
-    backend  : "file",          // backend file ==> file-backend.js
+    backend  : "FlatFile",      // backend file ==> file-backend.js
     name     : "GpsdFile",      // friendly service name
     mindist  : 200,             // dont store data if device move less than 200m
     maxtime  : 3600,            // force data store every 3600s even if device does not move
-    debug    : 5,               // debug level 0=none 9=everything
+    debug    : 1,               // debug level 0=none 9=everything
     
     "services"    :  {   // Label: "friendly name" "adapter" "tcp server port"
-        telnet : {info: "Telnet"    , adapter: "telnet" , port:"6000"},
-        nmea183: {info: "Simulator" , adapter: "nmea"   , port:"6001"}
+        telnet : {info: "Telnet"    , adapter: "TelnetConsole" , port:"6000"},
+        nmea183: {info: "Simulator" , adapter: "NmeaSimulator" , port:"6001"}
     },
 	
     "file": { // specific FlatFile options
-	store   : './samples/tracks-store',  // where to store track files [directory must exist]
+	store   : '../samples/tracks-store',  // where to store track files [directory must exist]
 	prefix  : 'imei-',           // use this a prefix [sample-imei.gpx]
         erase   : true               // false: append gpx info to existing files
     }

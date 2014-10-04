@@ -19,22 +19,33 @@ GpsDaemon = require("../lib/GpsdDaemon");
 
 // Sample for MySql option (Warning: you have to create your base+tables first)
 var MySqlSample = {
-    backend  : "mysql",         // backend file ==> mysql-backend.js
-    name     : "GpsdMySQL",     // friendly service name
-    mindist  : 200,             // dont store data if device move less than 200m
-    maxtime  : 3600,            // force data store every 3600s even if device does not move
-    debug    : 5,               // debug level 0=none 9=everything
+    backend    : "MySql",         // backend file ==> mysql-backend.js [default file]
+    name       : "GpsdMySQL",     // friendly service name [default Gpsd-Track]
+    inactivity : 900,             // remove device from active list after xxxs inactivity [default 600s]
+    debug      : 7,               // debug level 0=none 9=everything
     
-    "services"    :  {   // Label: "friendly name" "adapter" "tcp server port"
-        nmea183: {info: "Simulator" , adapter: "nmea"   , port:"5001"},
-        telnet : {info: "Telnet"    , adapter: "telnet" , port:"5000"},
-        gps103 : {info: "Boats"     , adapter: "tk103"  , port:"5002"},
-        traccar: {info: "Phones"    , adapter: "traccar", port:"5006"}
+    "services"    :  {  // WARNING: service network port MUST NOT conflict
+        /*
+            info     : 'a friendly name for your service'
+            adapter  : 'xxxx for adapter file = ./adapter/xxxx-adapter.js'
+            port     : 'tcp port for both service provider|consumer'
+            hostname : 'remote service provider hostname  [default localhost]'
+            timeout  : 'reconnection timeout for consumer of remote service [default 120s]'
+            imei     : 'as standard nmea feed does not provide imei this is where user can provide it'
+            maxspeed : 'any thing faster is view as an invalid input [default=55m/s == 200km/h]
+            mindist  : 'dont store data if device move less than xxxm [default 200m]'
+            maxtime  : 'force data store every xxxxs even if device did not move [default 3600s]'
+            debug    : 'allow to give a specific debug level this adapter default is [gpsd.debug]'
+        */
+               
+        // following services are servers and wait for service to connect
+         Telnet   : {info: "Telnet Console"  , adapter: "TelnetConsole" , port:4000}
+        ,AisTcp   : {info: "Ais Hub Feed"    , adapter: "AisTcpFeed"    , hostname: "localhost"  , port:4001, timeout:60, maxspeed:20}
+        ,RemGps   : {info: "Gps Over Tcp"    , adapter: "NmeaTcpFeed"   , hostname: "localhost"  , port:4002, timeout:60, mmsi:123456789, maxspeed:10, mindist:100}
     },
 	
-    "mysql": { // Specific MySql options [need to reflect your configuration]
+    "mysql": { // Specific MySql options [should reflect your configuration]
 	hostname:"10.10.100.101",
-        // basename: "gpstrack",
         basename: "gpsdtest",
 	username: "gpsdtest",
         password: "MyPasswd"

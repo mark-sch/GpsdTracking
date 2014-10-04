@@ -1,24 +1,32 @@
 GpsdTracking
 ==============
 
-GpsdTracking is an opensource server for various GPS tracking devices. 
+GpsdTracking is an open source server for various GPS tracking devices. 
+Its provides data acquisition and storage on database for trackers and
+phone-apps, as well as an AIS/NMEA simulator.
+
 Main features are:
  - multiple storage backends: MySql, FlatFile, etc..
- - multiple tracking protocols gps103,traccar,nmea, ....
- - support full set of commands's trackers
- - global vision of every active devices indepandantly of adapter/protocols
- - support of broadcast to send a global commands
- - <telnet> console for remote supervision
- - commands automatic retry on timeout
- - provide feature for save storage space. No waypoints store when target does not move
- - provide a GpsSimulator to emulate NMEA device from a GPX file
- - flatfile backend generates standard GPX files from input tacking feeds
+ - support tcp/socket tracker devices: gps103,traccar,nmea, ....
+ - support http/gprmc android/iphone: CellTrac, OpenGTSClient, GerGTSTracker
+ - support tcp/client mode request AIShub, MarineTraffic, Gpsd/Jason, ....
+ - support full set of commands [reset alarm, upload SD, etc ...]
+ - global vision of every active devices independently of adapter/protocols
+ - support broadcast mode to send a global commands [ie: track all]
+ - <telnet console> for remote supervision
+ - commands queue with automatic retry when device not present
+ - provide save storage space mode. No waypoints store when target move less than xxxx
+ - provide a GpsSimulator to emulate NMEA/AIS devices from GPX route files
+ - support AIS 6bit encoding decoding for static vessel and navigation report
+ - simulator for multiple AIS target
+ - flatfile backend generates standard GPX files from input tracking feeds
+ Etc.
 
-GpsdTracking has been designed to simply integration of new
+GpsdTracking is designed to make as simple as possible integration of new
 tracking devices/backends. All specific parts or devices/backend are exported
 to dedicated files. User only need to start from a sample, copy and customise.
- - to add a new backend user "file-backend" as starting point
- - to add a new device user "nmea-adapter" or "gps103" as starting point.
+ - to add a new backend start "flatfile-backend"
+ - to add a new device use start from "nmea-adapter/gps103tk102"
 
 Warning: Ubuntu/Debian user should exec following command to make "node"
 visible as a standard command. If not they should use 'nodejs' in place of 'node'
@@ -40,7 +48,6 @@ References
     - https://github.com/freshworkstudio/gps-tracking-nodejs
     - http://www.catb.org/gpsd/
     ...
-
                         
   # Install with npm
     npm install gpsdtracking
@@ -48,10 +55,10 @@ References
     NODE=node | NODE=nodejs [ubuntu/debian 'nodejs' everywhere else "node" !!!]
 
   # Start a flatfile server
-    $NODE apps/FlatFileGpsdTrackingSample.js
+    $NODE apps/GpsdFlatFileSample.js
 
   # Simulate a gpstracker
-    $NODE ./apps/GpsTrackerSimulator.js --file=./samples/gpx-files/opencpn-sample.gpx --port=6001 --tic=2 --debug=5
+    $NODE ./apps/DeviceSimulator.js --gpxfile=./samples/gpx-files/opencpn-sample.gpx --port=6001 --tic=2 --debug=4
 
   # Check control console
     telnet local 6000
@@ -60,7 +67,7 @@ References
 ------------------------
   FlatFile backend 
 ------------------------
-   * edit FlatFileGpsTrackingSample and check options
+   * edit FlatFileSample
       -- verify devices port and track-store directory [path & prefix]
 
    * look in track-store
@@ -69,25 +76,26 @@ References
 ---------------------
 - With MySQL backend 
 ---------------------
-   * edit MySqlGpsTrackingSample and check options
+   * edit MySqlSample 
       -- verify database name/user/password
-      -- check network port for nmea and telnet
+      -- check network port for nmea and telnet adapters
 
-   * create MySQL base with mysql command line [GpsdTrack can only create base tables]
+   * create MySQL base with mysql command line [GpsdTrack can create tables, but base should exist]
 
-   * start  Server  $NODE ./apps/MySqlGpsdTrackingSample.js 
+   * start  Server  $NODE ./apps/GpsdMySqlSample.js 
       -- verify that it successfully connect onto mysql
 
    * connect telnet console  [telnet localhost 5000] by default for MySQL sample app.
-      -- register to listen to event [command: evt]
-      -- create MySQL tables [command: dbinit] This create tables if they do not exist
+      -- type help to get console command list
+      -- register to listen to event [evt]
+      -- create MySQL tables [db init] This create tables if they do not exist
       -- create a fake tracking device in MySQL [command: create 123456789 My Fake Device]
       [note: user HAVE TO create device in DB before server push received data to DB]
       
-   * start a GpsSimulator
-      -- $NODE ./apps/GpsTrackerSimulator.js --file=./samples/gpx-files/opencpn-sample.gpx --imei=123456789 --port=5001 --tic=10 --speed=10 --debug=1
+   * start DeviceSimulator
+      -- $NODE ./apps/DeviceSimulator.js --gpxfile=./samples/gpx-files/opencpn-sample.gpx --imei=123456789 --port=5001 --tic=2 --speed=10 --debug=1
 
-   * look in your DB
+   * look for position in DB
       -- select * from devices;
       -- select * from positions;
 
@@ -102,32 +110,40 @@ Typical scenario from telnet console using MySQL
     GpsdMySQL>  evt
      --> Hook On [Listening for gpsd [queue|acept|error] events
 
-    GpsdMySQL>  dbinit  // check/create tables in mysql
+    GpsdMySQL>  db init  // check/create tables in mysql
      --> OK  [check for errors on daemon log]
 
-    GpsdMySQL> dev // use GpsdSimulator if you don't have a tracer
+    GpsdMySQL> dev all  // use GpsdSimulator if you don't have a tracer
      --> List active devices 
-     --> - no active devices [retry later]
+     --> - no active device [retry later]
 
-    GpsdMySQL>  dev     
+    GpsdMySQL> dev list  // use GpsdSimulator if you don't have a tracer
+     --> List loged devices 
+     --> - no active device [try list all]
+
+    GpsdMySQL>  dev  all   
      --> List active devices 
-     --> - 1 - imei: 359710043551135 Name:"false" uuid=GpsdClient://10.10.95.1:25508
+     --> - 1 - imei: 359710043551135 Name:"false" uid=GpsdClient://10.10.95.1:25508
 
-    GpsdMySQL>  create 359710043551135 My First Tracker in DB
+    GpsdMySQL>  db create 359710043551135 My First Tracker in DB
      --> create:OK  
 
-    GpsdMySQL>  logout 359710043551135      // force device deconnection
+    GpsdMySQL>  dev logout 359710043551135      // force device reconnection
      --> queue:0 --> [job:0] command=LOGOUT imei=359710043551135 [sent]
 
-    GpsdMySQL>  dev
+    GpsdMySQL>  dev list
      --> List active devices 
-     --> 1 - imei: 359710043551135 Name:"Fulup GPS103" uuid=GpsdClient://10.10.95.1:25509
+     --> 1 - imei: 359710043551135 Name:"Fulup GPS103" uid=GpsdClient://10.10.95.1:25509
 
-    GpsdMySQL> track 359710043551135
-    --> queue:1#-1 Queue Status=ACCEPT DevId=359710043551135 Command=GET_POS JobReq=1 Retry=0
-    --> [job:1] command=GET_POS imei=359710043551135 [sent]
+    GpsdMySQL> dev track 359710043551135
+     --> queue:1#-1 Queue Status=ACCEPT DevId=359710043551135 Command=GET_POS JobReq=1 Retry=0
+     --> [job:1] command=GET_POS imei=359710043551135 [sent]
 
-    GpsdMySQL> track 0 // broadcast tracking command to every active devices
+    GpsdTracker> dev info 359710043551135
+     -->  Imei: 359710043551135 Name:[Fulup GPS103] Loged:true Adapter:Tk102-Gps103
+     --> Lat: 0 Lon: 0 Speed:undefined TimeStamp:Fri Oct 03 2014 22:34:14 GMT+0000 (UTC)
+
+    GpsdMySQL> dev track all // broadcast tracking command to every active devices
     --> queue:0 --> [job:[object Object],2] command=Broadcast imei=undefined [sent]
     --> [job:1] command=GET_POS imei=359710043551134 [sent]
     --> [job:2] command=GET_POS imei=359710043551111 [sent]
@@ -138,6 +154,39 @@ Typical scenario from telnet console using MySQL
     GpsdMySQL> quit
     --> Connection closed by foreign host.
 
+---------------------------------------------------------------------
+    On line demo:  [does not save anything on disk]
+---------------------------------------------------------------------
+
+       tcp://sinagot.net:4000  Telnet control console
+
+       tcp://sinagot.net:4001  Ais Hub Simulator
+       tcp://sinagot.net:4002  NMEA GPRMC feed
+       tcp://sinagot.net:4003  NMEA AIVDM feed
+
+       tcp://sinagot.net:4010  Adapter waiting for GPS103    tracker
+       tcp://sinagot.net:4020  Adapter waiting for OpenGPRMC phone apps
+
+
+--------------------------------------------------------------------
+   AIS users
+     Vessel are view as devices
+     MMSI is used in place of IMEI
+--------------------------------------------------------------------
+Simulation
+  Make your GPX route with OpenCPN or any other application your like
+    play your route with AISHubsimulator and check for result open OpenCPN
+  
+Traffic storage:
+    point your server onto your AIShub,MarineTraffic,... feeds
+    - check for device [vessel are view as devices] with "dev all" command. 
+    - select the device MMSI [view as iemi] you want to track.
+    - create en entry in your DB with "dev create xxxx MyVesselName".
+    - force reauthentication of device§vessel with "dev logout xxxx"
+  
+  For developers, GpsdTracking, embedded an Encode/Decode AIS library
+  written in JavaScript. Thanks to OpenCpn, Gpsd and Danish Marine authority
+  who did the hard work of documenting and providing the AIS nasty 6bits encoding mechanism.
 
 GpsdTracking is written in node.js
 

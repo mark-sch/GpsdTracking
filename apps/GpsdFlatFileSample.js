@@ -14,6 +14,18 @@
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
+ * 
+ * This backend is a pure sample for developpers. Its has not real value
+ * from an application point of view !!!
+ * 
+ * 1) $NODE apps/GpsdFlatFileSample.js
+ * 2) $NODE ./apps/DeviceSimulator.js --gpxfile=./samples/gpx-files/opencpn-sample.gpx --port=6001 --tic=2 
+ * 3) telnet localhost 6000
+ *    > dev list
+ *    > dev info
+ * 4) look for produces GPX files in samples/tracks-store
+ *    > application create one GPX per IMEI
+ * 
  */
 GpsDaemon = require("../lib/GpsdDaemon"); 
 

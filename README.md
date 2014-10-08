@@ -151,6 +151,14 @@ Typical scenario from telnet console using MySQL
     --> [job:4] command=GET_POS imei=359710043553333 [sent]
     etc...
 
+    GpsdMySQL> db show 359710043551135
+    --> -0- Lat:47.6184 Lon:-2.7609 Speed:0 Alt:23713 Crs:0 Time:2014-10-05T02:37:00.000Z
+    --> -1- Lat:47.6131 Lon:-2.7367 Speed:26.7 Alt:201154 Crs:0 Time:2014-10-04T20:11:00.000Z
+    --> -2- Lat:47.6205 Lon:-2.7332 Speed:0 Alt:200854 Crs:0 Time:2014-10-04T20:08:00.000Z
+    --> -3- Lat:47.6301 Lon:-2.7346 Speed:15 Alt:200555 Crs:0 Time:2014-10-04T20:05:00.000Z
+    etc...
+
+
     GpsdMySQL> quit
     --> Connection closed by foreign host.
 
@@ -161,12 +169,14 @@ Typical scenario from telnet console using MySQL
        tcp://sinagot.net:4000  Telnet control console
 
        tcp://sinagot.net:4001  Ais Hub Simulator
-       tcp://sinagot.net:4002  NMEA GPRMC feed
-       tcp://sinagot.net:4003  NMEA AIVDM feed
+       tcp://sinagot.net:4002  NMEA single GPRMC feed
+       tcp://sinagot.net:4003  NMEA single vessel AIVDM feed
 
-       tcp://sinagot.net:4010  Adapter waiting for GPS103    tracker
-       tcp://sinagot.net:4020  Adapter waiting for OpenGPRMC phone apps
-
+       tcp://sinagot.net:4010    Adapter waiting for GPS103    tracker
+       http://sinagot.net:4020/  Adapter waiting for OpenGPRMC phone apps
+       Note: OpenGPRMC support both CellTrac Free & Pro version in theory
+       any other GPRMC over HTTP. Pro version support group and device map.
+       demo URL 'http://sinagot.net:4020/' [don't forget last /]
 
 --------------------------------------------------------------------
    AIS users
@@ -175,7 +185,13 @@ Typical scenario from telnet console using MySQL
 --------------------------------------------------------------------
 Simulation
   Make your GPX route with OpenCPN or any other application your like
-    play your route with AISHubsimulator and check for result open OpenCPN
+  play your route with AISHubsimulator and check for result open OpenCPN
+
+Debug:
+  Check with Ais2Json if your AIS feed are valid
+  Check with Demo Server debug port for data input to storage
+    - Port 4030 provides a JSON human readable copy of data input to storage backend
+    - Port 4040 same thing but with AIS/AIVDM format for OpenCPN type of application
   
 Traffic storage:
     point your server onto your AIShub,MarineTraffic,... feeds

@@ -46,29 +46,39 @@ var DummyDemo = {
     backend    : "Dummy",         // backend file ==> Dummy-backend.js 
     name       : "GpsdDummyDemo", // friendly service name [default Gpsd-Track]
     inactivity : 900,             // remove device from active list after xxxs inactivity [default 600s]
-    debug      : 1,               // debug level 0=none 9=everything
+    jsonport   : 4030,            // server port to replay in JSON human readable incomming data
+    aisport    : 4040,            // Same thing but in AIS/AIVDM format
+    sockpause  : 250,             // delay in ms in beetween each replay data [0=nowait]
+    storesize  : 20,              // size of postition/device kept in ram for "db search" command
+    debug      : 4,               // debug level 0=none 9=everything
     
-    "services"    :  {  // WARNING: service network port MUST NOT conflict
+    "services"    :  {  // WARNING: NO service network port SHALL conflict
         /*
             info     : 'a friendly name for your service'
             adapter  : 'xxxx for adapter file = ./adapter/xxxx-adapter.js'
-            port     : 'tcp port for both service provider|consumer'
+            port     : 'tcp port for both service server & client mode'
             hostname : 'remote service provider hostname  [default localhost]'
             timeout  : 'reconnection timeout for consumer of remote service [default 120s]'
-            imei     : 'as standard nmea feed does not provide imei this is where user can provide it'
+            imei     : 'as standard nmea feed does not provide imei this is where user can provide a fake one'
             maxspeed : 'any thing faster is view as an invalid input [default=55m/s == 200km/h]
             mindist  : 'dont store data if device move less than xxxm [default 200m]'
             maxtime  : 'force data store every xxxxs even if device did not move [default 3600s]'
-            debug    : 'allow to give a specific debug level this adapter default is [gpsd.debug]'
+            debug    : 'allow to give a specific debug level this adapter default is global [gpsd.debug]'
+        
+            Note: computation of small distance in beetween two points is fast but approximative.
+                  Be carefull to check you do not miss data, especially if tic is small. In case
+                  of doubt increase speed and reduce min dist. You can also set debug hight enough
+                  to see event on ignoring data because of distance/speed computation.
         */
                
         // following services are servers and wait for service to connect
          Telnet   : {info: "Telnet Console"  , adapter: "TelnetConsole" , port:4000}
-        ,Gps103   : {info: "Tk102 Gps103"    , adapter: "Gps103Tk102"   , port:4010}
-        ,Celltrac : {info: "CellTrac Android", adapter: "GtcGprmcDroid" , port:4020}
+        ,Gps103   : {info: "Tk102 Gps103"    , adapter: "Gps103Tk102"   , port:4010} 
+        ,TR55     : {info: "Traccar Android" , adapter: "TraccarDroid"  , port:4011}
+        ,Celltrac : {info: "CellTrac Android", adapter: "GtcGprmcDroid" , port:5020}
 
-        ,AisTcp   : {info: "Ais Hub Feed"    , adapter: "AisTcpFeed"    , hostname: "localhost"  , port:4001, timeout:60, maxspeed:20}
-        ,RemGps   : {info: "Gps Over Tcp"    , adapter: "NmeaTcpFeed"   , hostname: "localhost"  , port:4002, timeout:60, mmsi:123456789, maxspeed:10, mindist:100}
+        ,AisTcp   : {info: "Ais Hub Feed"    , adapter: "AisTcpFeed"    , hostname: "sinagot.net"  , port:4001, timeout:60, mindist:100}
+        ,RemGps   : {info: "Gps Over Tcp"    , adapter: "NmeaTcpFeed"   , hostname: "sinagot.net"  , port:4002, timeout:60, mmsi:111111111, mindist:100}
     }
 };
 

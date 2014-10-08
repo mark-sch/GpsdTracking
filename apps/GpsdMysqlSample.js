@@ -22,16 +22,16 @@ var MySqlSample = {
     backend    : "MySql",         // backend file ==> mysql-backend.js [default file]
     name       : "GpsdMySQL",     // friendly service name [default Gpsd-Track]
     inactivity : 900,             // remove device from active list after xxxs inactivity [default 600s]
-    debug      : 4,               // debug level 0=none 9=everything
+    debug      : 7,               // debug level 0=none 9=everything
     
-    "services"    :  {  // WARNING: service network port MUST NOT conflict
+    "services"    :  {  // WARNING: NO service network port SHALL conflict
         /*
             info     : 'a friendly name for your service'
             adapter  : 'xxxx for adapter file = ./adapter/xxxx-adapter.js'
-            port     : 'tcp port for both service provider|consumer'
+            port     : 'tcp port for both service server & client mode'
             hostname : 'remote service provider hostname  [default localhost]'
             timeout  : 'reconnection timeout for consumer of remote service [default 120s]'
-            imei     : 'as standard nmea feed does not provide imei this is where user can provide it'
+            imei     : 'as real nmea feed does not provide imei this is where user can provide a fake one'
             maxspeed : 'any thing faster is view as an invalid input [default=55m/s == 200km/h]
             mindist  : 'dont store data if device move less than xxxm [default 200m]'
             maxtime  : 'force data store every xxxxs even if device did not move [default 3600s]'
@@ -43,7 +43,7 @@ var MySqlSample = {
          ,Gps103   : {info: "Tk102 Gps103"    , adapter: "Gps103Tk102"   , port:5001}
          ,Nmea183  : {info: "Simulator Nmea"  , adapter: "NmeaSimulator" , port:5002}
          ,Traccar  : {info: "Traccar Client"  , adapter: "TraccarDroid"  , port:5006}
-         ,Celltrac : {info: "CellTrac Android", adapter: "GtcGprmcDroid" , port:5007}
+         ,Celltrac : {info: "CellTrac Android", adapter: "GtcGprmcDroid" , port:5008}
         
     },
 	

@@ -52,7 +52,7 @@
 // ------------------ Global options -------------------------------------------
    GPX_DIR= "/../samples/simulator/"; //where to find GPX routes
    SVC_POR= 4001;                     // what ever please you
-   DBG_LEV= ;                        // from 0 to 9
+   DBG_LEV= 4;                        // from 0 to 9
    AIS_TIC= 10;                       // ais refresh status report rate
    SCK_PSE= 500;                      // wait 0.5s in between each messages
 // =============================================================================
@@ -108,7 +108,7 @@ MakeDefaults.prototype.Mmsi = function () {
     if (this.args[1] !== 'undefined') {
        mmsi =  parseInt (this.args[1]);
     } else {
-       if (this.count ===0)  mmsi =0;
+       if (this.count === 0)  mmsi = 0;
        else mmsi = parseInt ('1000000' + this.count);
     }
     this.mmsi= mmsi;
@@ -246,6 +246,11 @@ function TcpSvrListenFx (err) {
 // ----------- User Event Handler -----------------
 function ListenEvents (simulator) {
     var count =0;  // Simple counter to make easier to follow message flow
+    
+    var MathDec = function (number, dec) {
+        var expo=Math.pow (10, dec);
+        return (parseInt (number*expo)/expo);
+    };
        
     // Events from queued jobs
     EventHandlerNotice = function (state, opts){ // this.event.emit ("notice","START",this.opts);
@@ -261,7 +266,8 @@ function ListenEvents (simulator) {
          switch (aisrqt.msgtype) {
             case 3:  // class A position report
             case 18: // class B position report
-                Debug (3, "## Ais mmsi:type:3,18 [%s] Lon=%d Lat=%s Speed=%s Bearing=%s", aisrqt.mmsi, aisrqt.lon, aisrqt.lat, aisrqt.sog, aisrqt.cog);
+                
+                Debug (3, "## Ais mmsi:type:3,18 [%s] Lon=%d Lat=%s Speed=%s Bearing=%s", aisrqt.mmsi, MathDec(aisrqt.lon,4), MathDec(aisrqt.lat) , aisrqt.sog, aisrqt.cog);
                 break;
             case 5:
             case 24:
@@ -276,7 +282,7 @@ function ListenEvents (simulator) {
      // Events on action refused by tracker adapter 
     EventHandlerGprmc = function(job, nmea){ // this.event.emit ("gprmc", job, ais.nmea);
         // job={lon=xx, lat=xx, speed=xx, bearing=xxx}
-        Debug (3, "## Gprmc Lon=%d Lat=%s Speed=%s Bearing=%s", job.lon, job.lat, job.speed, job.bearing);
+        Debug (3, "## Gprmc Lon=%d Lat=%s Speed=%s Bearing=%s", MathDec(job.lon), MathDec(job.lat), job.speed, job.bearing);
         // post new nmea paquet to the queue
         QJhandle.push (nmea, QJcallback);
     };

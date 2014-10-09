@@ -5,7 +5,7 @@ GpsdTracking is an open source server for various GPS tracking devices.
 Its provides data acquisition and storage on database for trackers and
 phone-apps, as well as an AIS/NMEA simulator.
 
-Main features are:
+Main features are: 
  - multiple storage backends: MySql, FlatFile, etc..
  - support tcp/socket tracker devices: gps103,traccar,nmea, ....
  - support http/gprmc android/iphone: CellTrac, OpenGTSClient, GerGTSTracker

@@ -74,7 +74,8 @@ var DummyDemo = {
         // following services are servers and wait for service to connect
          Telnet   : {info: "Telnet Console"  , adapter: "TelnetConsole" , port:4000}
         ,Gps103   : {info: "Tk102 Gps103"    , adapter: "Gps103Tk102"   , port:4010} 
-        ,TR55     : {info: "Traccar Android" , adapter: "TraccarDroid"  , port:4011}
+        ,Nmea183  : {info: "Simulator Nmea"  , adapter: "NmeaSimulator" , port:4012}
+        ,TR55     : {info: "Traccar Android" , adapter: "TraccarDroid"  , port:4013}
         ,Celltrac : {info: "CellTrac Android", adapter: "GtcGprmcDroid" , port:5020}
 
         ,AisTcp   : {info: "Ais Hub Feed"    , adapter: "AisTcpFeed"    , hostname: "sinagot.net"  , port:4001, timeout:60, mindist:100}

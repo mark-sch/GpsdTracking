@@ -72,7 +72,23 @@ References
 
    * look in track-store
       -- you should find a file name sample-123456789.gpx under construction.
- 
+ ------------------------
+  Dummy backend 
+------------------------
+This backend was designed for the online demo. It only keep the last 20
+positions of devices in RAM and does not store anything on disk. It is a
+good candidate for testing adapters.
+
+  -start $NODE apps/GpsdDummyDemo.js  [edit file to change defaults]
+  -point your device or simulator to corresponding port
+    * tcp://4010 for TK102/GPS103
+    * tcp://4011 for NMEA Device simulator
+    * http://5020 for CellTracFree/Pro
+  - connect on control console [telnet localhost 4000
+    * dev list
+    * dev info xxxxxx
+    * db search xxxxx 10 [display last 10 positions of device xxxx]
+
 ---------------------
 - With MySQL backend 
 ---------------------

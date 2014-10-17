@@ -71,15 +71,13 @@ References
 
   # Edit apps/GpsdDummyDemo.js and change to fit your own feed
 
-![GpsdTracking Control Console](http://www.sinagot.net/gpsdtracking/doc/gpsdtracking-control-consolex800.png "Telnet Control Console")
-
 ---------------------------------------------------------------------
     Online demo: 
 ---------------------------------------------------------------------
 As today demo works in IE9,Firefox,Chrome,... but fail on older version of IE
-http://sinagot.net:4080 [HTML-5 GeoJson/Ajax demo] 
 
 ![GpsdTracking Demo Homepage](http:www.sinagot.net:4080 "GpsdTracking Oneline Demo")
+ http://sinagot.net:4080 [HTML-5 GeoJson/Ajax demo] 
 
 Moving forward you can accept GpsdTracking demo services on following ports.
 
@@ -93,11 +91,10 @@ Moving forward you can accept GpsdTracking demo services on following ports.
 
        tcp://sinagot.net:4010                // Adapter waiting for GPS103/TK102 data
 
-       Note: OpenGPRMC support both CellTrac Free & Pro version. In theory
-       any other GPRMC over HTTP should work. Pro version support group and device map.
-       demo URL 'http://sinagot.net:4020/' [don't forget last /]
+     
 
  ![GpsdTracking Demo](http://www.sinagot.net/gpsdtracking/doc/gpstracking-homex800.png "demo Home page") 
+ http://sinagot.net:4080 [GpsdTracking Demo HomePage] 
  ------------------------
   Dummy backend 
 ------------------------
@@ -116,7 +113,10 @@ good candidate for testing adapters.
     * db search xxxxx 10 [display last 10 positions of device xxxx]
 
 ![GpsdTracking CellTracPro](http://www.sinagot.net/gpsdtracking/doc/celltrack-doublex800.png "CellTrac Free/Pro Android") 
-
+ 
+Note: OpenGPRMC support both CellTrac Free & Pro version. In theory
+       any other GPRMC over HTTP should work. Pro version support group and device map.
+       Celltrack URL 'http://sinagot.net:4020/' [don't forget last /]
 ------------------------
   FlatFile backend 
 ------------------------
@@ -154,6 +154,8 @@ good candidate for testing adapters.
    * look for position in DB
       -- select * from devices;
       -- select * from positions;
+
+![GpsdTracking Control Console](http://www.sinagot.net/gpsdtracking/doc/gpsdtracking-control-consolex800.png "Telnet Control Console")
 
 ------------------------------------------------
 Typical scenario from telnet console using MySQL

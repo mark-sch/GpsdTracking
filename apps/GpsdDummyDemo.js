@@ -49,8 +49,8 @@ var DummyDemo = {
     jsonport   : 4030,            // server port to replay in JSON human readable incomming data
     aisport    : 4040,            // Same thing but in AIS/AIVDM format
     sockpause  : 250,             // delay in ms in beetween each replay data [0=nowait]
-    storesize  : 20,              // size of postition/device kept in ram for "db search" command
-    debug      : 4,               // debug level 0=none 9=everything
+    storesize  : 50,              // size of postition/device kept in ram for "db search" command
+    debug      : 1,               // debug level 0=none 9=everything
     
     "services"    :  {  // WARNING: NO service network port SHALL conflict
         /*
@@ -70,16 +70,21 @@ var DummyDemo = {
                   of doubt increase speed and reduce min dist. You can also set debug hight enough
                   to see event on ignoring data because of distance/speed computation.
         */
-               
-        // following services are servers and wait for service to connect
+        // this controle console, you probably want it hyden behind your firewall
          Telnet   : {info: "Telnet Console"  , adapter: "TelnetConsole" , port:4000}
+        ,Httpd    : {info: "Minimalist HTTPd", adapter: "HttpAjax"      , port:4080, debug:5, cors:true}     // send Allow-Origin header
+         
+        // following apaters are TCP servers and wait for clients to connect
         ,Gps103   : {info: "Tk102 Gps103"    , adapter: "Gps103Tk102"   , port:4010} 
-        ,Nmea183  : {info: "Simulator Nmea"  , adapter: "NmeaSimulator" , port:4012}
-        ,TR55     : {info: "Traccar Android" , adapter: "TraccarDroid"  , port:4013}
-        ,Celltrac : {info: "CellTrac Android", adapter: "GtcGprmcDroid" , port:5020}
+        ,Nmea183  : {info: "Simulator Nmea"  , adapter: "NmeaSimulator" , port:4011}
+        ,TR55     : {info: "Traccar Android" , adapter: "TraccarDroid"  , port:4012} 
+        
+        // phone applications typically some form of OpenGPRMC
+        ,Celltrac : {info: "CellTrac Android", adapter: "GtcGprmcDroid" , port:4020, debug:5} // OpenGPRMC
 
-        ,AisTcp   : {info: "Ais Hub Feed"    , adapter: "AisTcpFeed"    , hostname: "sinagot.net"  , port:4001, timeout:60, mindist:100}
-        ,RemGps   : {info: "Gps Over Tcp"    , adapter: "NmeaTcpFeed"   , hostname: "sinagot.net"  , port:4002, timeout:60, mmsi:111111111, mindist:100}
+        // new adapters are clients [probably for test load generation only]
+        ,AisTcp   : {info: "Ais Hub Feed"    , adapter: "AisTcpFeed"    , hostname: "sinagot.net"  , port:4001, timeout:60, mindist:500}
+        ,RemGps   : {info: "Gps Over Tcp"    , adapter: "NmeaTcpFeed"   , hostname: "sinagot.net"  , port:4001, timeout:60, mmsi:123456789, mindist:500}
     }
 };
 

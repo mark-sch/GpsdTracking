@@ -7,7 +7,7 @@
     "email" : "fulup@fridu.net",
     "url" : "http://www.fridu.org/fulup"
   },
-  "keywords" : [ "gpsd", "tracker", "nmea", "gpx", "gps103", "tk102", "ais", "simulator", "gprmc" ],
+  "keywords" : [ "GTS", "opengts", "GPS", "tracker", "AIS", "GeoJSON", "nmea", "gpx", "gps103", "tk102", "simulator", "gprmc" ],
   "licenses" : {
     "type" : "apache20"
   },

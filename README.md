@@ -1,8 +1,12 @@
 GpsdTracking
 ==============
 
-GpsdTracking is an open source server for various GPS tracking devices. 
-Its provides data acquisition and storage on database for trackers and
+GTSdtracking is an opensource GPS tracking server framework, that enable easy
+integration of multiple GPS trackers in WEB applications. It provides data
+acquisition drivers for typical tracker devices or phone's GPS apps.
+It handle multiple database backend, and support GeoJSON, AIS & NMEA encoding/decoding.
+
+ for trackers and
 phone-apps, as well as an AIS/NMEA simulator.
 
 Main features are: 
@@ -22,13 +26,15 @@ Main features are:
  - flatfile backend generates standard GPX files from input tracking feeds
  Etc.
 
+![GpsdTracking Leaflet Demo](http://www.sinagot.net/gpsdtracking/doc/gpsdtracking-selectionx800.png "Sample of GeoJason/Ajax IU with Leaflet")
+
 GpsdTracking is designed to make as simple as possible integration of new
 tracking devices/backends. All specific parts or devices/backend are exported
-to dedicated files. User only need to start from a sample, copy and customise.
+to dedicated files. User only need to start from a sample, copy and customize.
  - to add a new backend start "flatfile-backend"
  - to add a new device use start from "nmea-adapter/gps103tk102"
 
-Warning: Ubuntu/Debian user should exec following command to make "node"
+Warning: Ubuntu/Debian users should exec following command to make "node"
 visible as a standard command. If not they should use 'nodejs' in place of 'node'
       sudo cd ln -s /usr/bin/node /usr/bin/nodejs
 
@@ -47,35 +53,57 @@ References
     - http://www.traccar.org
     - https://github.com/freshworkstudio/gps-tracking-nodejs
     - http://www.catb.org/gpsd/
-    ...
-                        
+    and many others.
+                      
+---------------------------------------------------------------------
+    Quick Start ?
+---------------------------------------------------------------------
   # Install with npm
     npm install gpsdtracking
     cd  node_modules/gpsdtracking
     NODE=node | NODE=nodejs [ubuntu/debian 'nodejs' everywhere else "node" !!!]
 
-  # Start a flatfile server
-    $NODE apps/GpsdFlatFileSample.js
-
-  # Simulate a gpstracker
-    $NODE ./apps/DeviceSimulator.js --gpxfile=./samples/gpx-files/opencpn-sample.gpx --port=6001 --tic=2 --debug=4
+  # Start a DummyBackend server
+    $NODE apps/GpsdDummyDemo.js
 
   # Check control console
-    telnet local 6000
+    telnet localhost 4000
     [enter] evt
-  
-------------------------
-  FlatFile backend 
-------------------------
-   * edit FlatFileSample
-      -- verify devices port and track-store directory [path & prefix]
+    [enter] dev list
 
-   * look in track-store
-      -- you should find a file name sample-123456789.gpx under construction.
+  # Edit apps/GpsdDummyDemo.js and change to fit your own feed
+
+![GpsdTracking Control Console](http://www.sinagot.net/gpsdtracking/doc/gpsdtracking-control-consolex800.png "Telnet Control Console")
+
+---------------------------------------------------------------------
+    Online demo: 
+---------------------------------------------------------------------
+As today demo works in IE9,Firefox,Chrome,... but fail on older version of IE
+http://sinagot.net:4080 [HTML-5 GeoJson/Ajax demo] 
+
+![GpsdTracking Demo Homepage](http:www.sinagot.net:4080 "GpsdTracking Oneline Demo")
+
+Moving forward you can accept GpsdTracking demo services on following ports.
+
+       tcp://sinagot.net:4000                // Telnet control console
+       http://sinagot.net:4080/geojson.rest  // Ajax GeoJson/Pjson REST API
+       http://sinagot.net:4020/              // OpenGPRMC phone apps [see here after CellTrack notes]
+
+       tcp://sinagot.net:4001                // Ais Hub Simulator [connect OpenCPN on this port]
+       tcp://sinagot.net:4002                // NMEA single GPRMC feed
+       tcp://sinagot.net:4003                // NMEA single vessel AIVDM feed
+
+       tcp://sinagot.net:4010                // Adapter waiting for GPS103/TK102 data
+
+       Note: OpenGPRMC support both CellTrac Free & Pro version. In theory
+       any other GPRMC over HTTP should work. Pro version support group and device map.
+       demo URL 'http://sinagot.net:4020/' [don't forget last /]
+
+ ![GpsdTracking Demo](http://www.sinagot.net/gpsdtracking/doc/gpstracking-homex800.png "demo Home page") 
  ------------------------
   Dummy backend 
 ------------------------
-This backend was designed for the online demo. It only keep the last 20
+This backend was designed to run the online demo. It only keeps the last xxx
 positions of devices in RAM and does not store anything on disk. It is a
 good candidate for testing adapters.
 
@@ -88,6 +116,20 @@ good candidate for testing adapters.
     * dev list
     * dev info xxxxxx
     * db search xxxxx 10 [display last 10 positions of device xxxx]
+
+![GpsdTracking CellTracPro](http://www.sinagot.net/gpsdtracking/doc/celltrack-doublex800.png "CellTrac Free/Pro Android") 
+
+------------------------
+  FlatFile backend 
+------------------------
+   * edit FlatFileSample
+      -- verify devices port and track-store directory [path & prefix]
+
+   * Simulate a gpstracker
+     $NODE ./apps/DeviceSimulator.js --gpxfile=./samples/gpx-files/opencpn-sample.gpx --port=6001 --tic=2 --debug=4
+
+   * look in track-store
+      -- you should find a file name sample-123456789.gpx under construction.
 
 ---------------------
 - With MySQL backend 
@@ -178,21 +220,6 @@ Typical scenario from telnet console using MySQL
     GpsdMySQL> quit
     --> Connection closed by foreign host.
 
----------------------------------------------------------------------
-    On line demo:  [does not save anything on disk]
----------------------------------------------------------------------
-
-       tcp://sinagot.net:4000  Telnet control console
-
-       tcp://sinagot.net:4001  Ais Hub Simulator
-       tcp://sinagot.net:4002  NMEA single GPRMC feed
-       tcp://sinagot.net:4003  NMEA single vessel AIVDM feed
-
-       tcp://sinagot.net:4010    Adapter waiting for GPS103    tracker
-       http://sinagot.net:4020/  Adapter waiting for OpenGPRMC phone apps
-       Note: OpenGPRMC support both CellTrac Free & Pro version in theory
-       any other GPRMC over HTTP. Pro version support group and device map.
-       demo URL 'http://sinagot.net:4020/' [don't forget last /]
 
 --------------------------------------------------------------------
    AIS users

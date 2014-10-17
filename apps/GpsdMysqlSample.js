@@ -38,13 +38,17 @@ var MySqlSample = {
             debug    : 'allow to give a specific debug level this adapter default is [gpsd.debug]'
         */
                
-        // following services are servers and wait for service to connect
+        // this controle console, you probably want it hyden behind your firewall
           Telnet   : {info: "Telnet Console"  , adapter: "TelnetConsole" , port:5000}
-         ,Gps103   : {info: "Tk102 Gps103"    , adapter: "Gps103Tk102"   , port:5001}
-         ,Nmea183  : {info: "Simulator Nmea"  , adapter: "NmeaSimulator" , port:5002}
-         ,Traccar  : {info: "Traccar Client"  , adapter: "TraccarDroid"  , port:5006}
-         ,Celltrac : {info: "CellTrac Android", adapter: "GtcGprmcDroid" , port:5008}
-        
+         ,GeoJson  : {info: "GeoJson API"     , adapter: "GeoJson"       , port:5001}
+          
+        // Tracker devices are TCP servers & wait for clients to connect
+         ,Gps103   : {info: "Tk102 Gps103"    , adapter: "Gps103Tk102"   , port:5010}
+         ,Nmea183  : {info: "Simulator Nmea"  , adapter: "NmeaSimulator" , port:5011}
+         ,Traccar  : {info: "Traccar Client"  , adapter: "TraccarDroid"  , port:5012}
+
+        // phone apps usually OpenGPRMC
+         ,Celltrac : {info: "CellTrac Android", adapter: "GtcGprmcDroid" , port:5120}
     },
 	
     "mysql": { // Specific MySql options [should reflect your configuration]

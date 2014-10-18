@@ -25,6 +25,7 @@ Main features are:
  Etc.
 
 ![GpsdTracking Leaflet Demo](http://www.sinagot.net/gpsdtracking/doc/gpsdtracking-selectionx800.png "Sample of GeoJason/Ajax IU with Leaflet")
+ http://www.sinagot.net/gpsdtracking [GpsdTracking Demo HomePage]
 
 GpsdTracking is designed to make as simple as possible integration of new
 tracking devices/backends. All specific parts or devices/backend are exported

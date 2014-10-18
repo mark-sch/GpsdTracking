@@ -1,7 +1,7 @@
 {
   "name" : "gpsdtracking",
-  "description" : "GpsdTracking is an opensource server for various GPS tracking devices. \nMain features are:\n - multiple storage backends: MySql, FlatFile, etc..\n - multiple tracking devices/protocols gps103,traccar,nmea, AIS, ....\n - provides a <telnet> console for remote suppervision\n - provide a GpsSimulator to simulate NMEA/AIS devices from a GPX file\n\nGpsdTracking is written in node.js",
-  "version" : "0.2.8",
+  "description" : "GTSdtracking is an opensource GPS tracking server framework",
+  "version" : "0.4.1",
   "author" : {
     "name" : "Fulup Ar Foll",
     "email" : "fulup@fridu.net",

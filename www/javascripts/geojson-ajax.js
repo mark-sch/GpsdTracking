@@ -59,13 +59,10 @@ function DevListCB (data) {
 function GetDevList() {
    
   // Select direct Ajax/Json profile if using GpsdTracking/HttpAjax server otherwise use JsonP
-  var corsbypass = true;  
-  if (location['GPSD_HTTP_AJAX']) corsbypass = false;
-  // Json & html served from two different web servers
-  if (corsbypass) var gpsdApi = "http://sinagot.net:4080/geojson.rest?jsoncallback=?";
-            else  var gpsdApi = "geojson.rest?";
+  if (HTTP_AJAX_CONFIG.JSONP) var gpsdApi = "http://sinagot.net:4080/geojson.rest?jsoncallback=?";
+            else  var gpsdApi = "/ajax/geojson.rest?";
   var gpsdRqt = 
-    {key   :123456789 // user authentication key
+    {key   : HTTP_AJAX_CONFIG.GPSD_API_KEY // user authentication key
     ,cmd   :'list'    // rest command
     ,group :'all'     // group to retreive
     ,round : true     // ask server to round numbers
@@ -73,5 +70,9 @@ function GetDevList() {
   $.getJSON(gpsdApi,gpsdRqt, DevListCB);
 };
 
-// $(document).ready(GetDevList); Done from HTML page
 
+try { // for test & debug  provide a predefined key demo key
+    var key=HTTP_AJAX_CONFIG.API_KEY;
+} catch (e) {
+    HTTP_AJAX_CONFIG={JSONP: true, GPSD_API_KEY: 123456789};
+}

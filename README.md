@@ -77,9 +77,9 @@ References
 As today demo works in IE9,Firefox,Chrome,... but fail on older version of IE
 
 ![GpsdTracking Demo Homepage](http:www.sinagot.net:4080 "GpsdTracking Oneline Demo")
- http://sinagot.net:4080 [HTML-5 GeoJson/Ajax demo] 
+ http://www.sinagot.net/gpsdtracking [GpsdTracking Demo HomePage] 
 
-Moving forward you can accept GpsdTracking demo services on following ports.
+Moving forward you can access GpsdTracking demo services on following ports.
 
        tcp://sinagot.net:4000                // Telnet control console
        http://sinagot.net:4080/geojson.rest  // Ajax GeoJson/Pjson REST API
@@ -91,10 +91,9 @@ Moving forward you can accept GpsdTracking demo services on following ports.
 
        tcp://sinagot.net:4010                // Adapter waiting for GPS103/TK102 data
 
-     
 
  ![GpsdTracking Demo](http://www.sinagot.net/gpsdtracking/doc/gpstracking-homex800.png "demo Home page") 
- http://sinagot.net:4080 [GpsdTracking Demo HomePage] 
+ http://www.sinagot.net/gpsdtracking [GpsdTracking Demo HomePage] 
  ------------------------
   Dummy backend 
 ------------------------
@@ -226,6 +225,8 @@ Typical scenario from telnet console using MySQL
      Vessel are view as devices
      MMSI is used in place of IMEI
 --------------------------------------------------------------------
+![GpsdTracking Ais Simulator](http://www.sinagot.net/gpsdtracking/doc/opencpn-simulatorx800.png "Ais Simulator")
+
 Simulation
   Make your GPX route with OpenCPN or any other application your like
   play your route with AISHubsimulator and check for result open OpenCPN

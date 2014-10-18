@@ -38,7 +38,7 @@ var activeDevTracks=[];
 var backButton=null;
 
 function GetDevList(devid) {
-        
+  
     function DevListCB (geojsonFeature) {
     var demoselect; // use to get a preselected device during demo
     
@@ -113,9 +113,6 @@ function GetDevList(devid) {
     if (backButton !== null)    map.removeLayer(backButton);
     for (var track in activeDevTracks) map.removeLayer(activeDevTracks[track]);
 
-    // buit a tip as circlemarker des not implement them
-      
-        
     // display GeoJson data parsing them throught callback before dislay
     devListLayer = L.geoJson(geojsonFeature, {'pointToLayer':pointToLayerCB});
     devListLayer.addTo(map);
@@ -131,13 +128,12 @@ function GetDevList(devid) {
   } // end DevListCB
   
   // prepare request to GpsTracking JSON REST service  
- var corsbypass = true;  
-  if (location['GPSD_HTTP_AJAX']) corsbypass = false;
-  if (corsbypass)  var gpsdApi = 'http://sinagot.net:4080/geojson.rest?jsoncallback=?';
-  else  var gpsdApi = "geojson.rest";
+  if (HTTP_AJAX_CONFIG.JSONP)  var gpsdApi = 'http://sinagot.net:4080/ajax/geojson.rest?jsoncallback=?';
+  else  var gpsdApi = "/ajax/geojson.rest";
+  
   var gpsdRqt = 
       {format:'json'       // json ou pjson with ?jsoncallback=?
-      ,key   :GPSD_API_KEY // user authentication key
+      ,key   : HTTP_AJAX_CONFIG.GPSD_API_KEY // user authentication key
       ,cmd   :'list'       // rest command
       ,group :'all'        // group to retreive
       };
@@ -221,7 +217,7 @@ function GetDevTrack(devid) {
      
      // back button is a marker that we replace at the end of each map move  
     var point = L.point(65,35); // where to place backbutton
-    var backIcon = L.icon({iconUrl: '/images/button-backx75.png',iconSize: [50, 50]});
+    var backIcon = L.icon({iconUrl: '../images/button-backx75.png',iconSize: [50, 50]});
     backButton= L.marker(map.containerPointToLatLng (point), 
                 {title: 'back to global view'
                 ,icon:  backIcon,draggable: true
@@ -231,14 +227,12 @@ function GetDevTrack(devid) {
      
   }  // end DevRouteCB
     
-    // Select direct Ajax/Json profile if using GpsdTracking/HttpAjax server otherwise use JsonP
-  var corsbypass = true;  
-  if (location['GPSD_HTTP_AJAX']) corsbypass = false;
-  if (corsbypass)  var gpsdApi = 'http://sinagot.net:4080/geojson.rest?jsoncallback=?';
-  else  var gpsdApi = "geojson.rest";
+  // Select direct Ajax/Json profile if using GpsdTracking/HttpAjax server otherwise use JsonP
+  if (HTTP_AJAX_CONFIG.JSONP)  var gpsdApi = 'http://sinagot.net:4080/ajax/geojson.rest?jsoncallback=?';
+  else  var gpsdApi = "/ajax/geojson.rest";
       
   var gpsdRqt = 
-      {key   : GPSD_API_KEY // user authentication key
+      {key   : HTTP_AJAX_CONFIG.GPSD_API_KEY // user authentication key
       ,cmd   :'track'       // rest command
       ,devid : devid        // device to track
       ,llist : 20
@@ -250,9 +244,9 @@ function GetDevTrack(devid) {
 function DisplayDevMap() {
 
   // For more option Check http://leaflet-extras.github.io/leaflet-providers/preview/index.html
-  ActiveTiles=
-   {'OpenStreet': false  // free no key, no registration
-   ,'MapQuest'  : true   // no registration if not using mapquest API
+  var ActiveTiles=
+   {'OpenStreet': true   // free no key, no registration
+   ,'MapQuest'  : false  // no registration if not using mapquest API
    ,'NokiaRoad' : false  // registration required
    ,'NokiaSat'  : false  // registration required
    ,'MapBox'    : false  // need registration
@@ -260,8 +254,7 @@ function DisplayDevMap() {
    };
   
    // parse URL query for demo option selection
-   var democmd;
-   var demoid=123456789;  // default devid for demos
+   var democmd='default';
    
    var query=location.search.substring(1).split("&");
    for (slot in query) {
@@ -271,6 +264,16 @@ function DisplayDevMap() {
        if (action[0]==='devid')   demoid=action[1];
    }
 
+    // compute screen size
+    var mapzone=document.getElementById('PageMapDiv');
+    if (window.innerWidth > 1280) {
+        mapzone.style.width=(window.innerWidth * 0.7)+'px';;
+        mapzone.style.height=(window.innerHeight * 0.8)+'px';
+    } else {
+        mapzone.style.width=(window.innerWidth * 0.9)+'px';;
+        mapzone.style.height=(window.innerHeight * 0.9)+'px';
+    }
+    
     // Create a map  center on Golf of Morbihan 
     map = L.map('PageMapDiv').setView ([47.501, -2.975],12);
     
@@ -330,9 +333,9 @@ function DisplayDevMap() {
     L.control.layers(selectedBaseMap)
      .setPosition('topleft')
      .addTo(map);
-    
+     
     // warning 123456789 should be an existing devices in your active list
-    
+    console.log ("democmd=%s", democmd);
     switch (democmd) { 
         case 'track':
               GetDevTrack (demoid);
@@ -341,10 +344,14 @@ function DisplayDevMap() {
               GetDevList(demoid);
               break;
         default : 
+   
             GetDevList();
     }
 };
 
-// activate demo
-if (GPSD_API_KEY===undefined) GPSD_API_KEY=123456789; // should normaly be provided by web server
-$(document).ready(DisplayDevMap);
+
+try { // for test & debug  provide a predefined key demo key
+    var key=HTTP_AJAX_CONFIG.API_KEY;
+} catch (e) {
+    HTTP_AJAX_CONFIG={JSONP: true, GPSD_API_KEY: 123456789};
+}

@@ -54,8 +54,10 @@ References
     - https://github.com/freshworkstudio/gps-tracking-nodejs
     - http://www.catb.org/gpsd/
     and many others.
+
 ![GpsdTracking WebSocket Demo] (http://breizhme.org/gpsdtracking/doc/gpsdtracking-websockx800.png "Sample of WebSock animation")
- http://breizhme.org/gpsdtracking/html/leaflet-map.html?democmd=moving [GpsdTracking Demo HomePage] 
+http://breizhme.org/gpsdtracking/html/leaflet-map.html?democmd=moving [GpsdTracking Demo HomePage]
+
 ---------------------------------------------------------------------
     Quick Start ?
 ---------------------------------------------------------------------
@@ -78,8 +80,6 @@ References
     Online demo: 
 ---------------------------------------------------------------------
 As today demo works in IE9,Firefox,Chrome,... but fail on older version of IE
-
-![GpsdTracking Demo Homepage](http://breizhme.org/gpsdtracking "GpsdTracking Demo Home Page")
 
 Moving forward you can access GpsdTracking demo services on following ports.
 

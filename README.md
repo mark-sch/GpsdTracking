@@ -26,7 +26,7 @@ Main features are:
  Etc.
 
 ![GpsdTracking Leaflet Demo](http://breizhme.org/gpsdtracking/doc/gpsdtracking-selectionx800.png "Sample of GeoJason/Ajax IU with Leaflet")
-![GpsdTracking leaflet Demo](http://breizhme.org/gpsdtracking/html/leaflet-map.html "GpsdTracking Leaflet Map demo")
+http://breizhme.org/gpsdtracking/html/leaflet-map.html [GpsdTracking Demo HomePage] 
 
 GpsdTracking is designed to make as simple as possible integration of new
 tracking devices/backends. All specific parts or devices/backend are exported
@@ -55,7 +55,7 @@ References
     - http://www.catb.org/gpsd/
     and many others.
 ![GpsdTracking WebSocket Demo] (http://breizhme.org/gpsdtracking/doc/gpsdtracking-websockx800.png "Sample of WebSock animation")
-![GpsdTracking WebSocket Demo](http://breizhme.org/gpsdtracking/html/leaflet-map.html?democmd=moving "GpsdTracking Leaflet Map demo")
+ http://breizhme.org/gpsdtracking/html/leaflet-map.html?democmd=moving [GpsdTracking Demo HomePage] 
 ---------------------------------------------------------------------
     Quick Start ?
 ---------------------------------------------------------------------

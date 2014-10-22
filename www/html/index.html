@@ -6,18 +6,20 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width">
-  <title>GpsdTracking Opensource GPS Tracking Framework</title>
-  <link rel="stylesheet" href="http://www.sinagot.net/gpsdtracking/f5/stylesheets/app.css">
-  <script src="http://www.sinagot.net/gpsdtracking/f5/javascripts/vendor/custom.modernizr.js"></script>
+  <title>GpsdTracking Opensource GTS Tracking Framework</title>
+  <link rel="stylesheet" href="http://breizhme.org/gpsdtracking/f5-546/css/normalize.css">
+  <link rel="stylesheet" href="http://breizhme.org/gpsdtracking/f5-546/css/foundation.css">
+  <link rel="stylesheet" href="http://breizhme.org/gpsdtracking/f5-546/css/app.css">
+  <script src="http://breizhme.org/gpsdtracking/f5-546/js/vendor/modernizr.js"></script>
 </head>
 <body>
-    <style type="text/css">body{font-family:'Raleway',sans-serif;font-size:18px;}hr{text-align:center;margin:0 auto;opacity:0.8;}ul{text-transform:uppercase;}ul.inline-list.right{text-transform:none;}ul.inline-list.right a{color:#000;}ul.inline-list.right a:hover{color:rgba(0,0,0,0.5);}h1{font-family:'American Typewriter','Courier New',Courier,Monaco,mono;font-size:32px;color:#fff;line-height:28px;margin-top:16px;margin-bottom:0px;text-align:center;}h2{font-family:'American Typewriter','Courier New',Courier,Monaco,mono;color:#fff;font-size:36px;line-height:34px;}h3{font-family:'American Typewriter','Courier New',Courier,Monaco,mono;font-size:24px;color:#fff;line-height:10px;text-align:center;font-weight:500;padding-bottom:10px;}h4{font-family:'American Typewriter','Courier New',Courier,Monaco,mono;color:#000;font-size:28px;padding-top:5px;}.columns.large-centered{padding-left:5px;padding-right:5px;}@media only screen and (max-width: 40em) {.columns.large-centered{font-size:13px;}}@media only screen and (min-width: 40.063em) {.columns.large-centered{font-size:14px;}}.about-box{color:#fff;}.black-box{background-color:rgba(0,0,0,0.55);padding:35px;font-weight:900;}.black-box p{font-weight:900;}.secondary.small.button{background-color:transparent;color:#fff;border:2px #fff solid;border-radius:5px;padding:15px 50px 15px 50px;margin:0;}.secondary.small.button:hover{background-color:rgba(255,255,255,0.5);}.row .main-wrapper{color:#fff;}.about-content{background-color:#fff;box-shadow:2px 2px 10px rgba(0,0,0,0.1);}.button-group li .button{border:0!important;}.button{-webkit-appearance:none;background-color:transparent;border-width:0;text-align:center;box-shadow:0 0 0;}.button:hover{color:rgba(255,255,255,0.7);background-color:transparent;}footer p,footer a{font-size:14px;}.hero{padding-bottom:50px;background-image:url("http://www.sinagot.net/gpsdtracking/images/opencpn-ais-simulator.png");background-size:cover;box-shadow:inset 0px 0px 0 2000px rgba(0,0,0,0.2);}.hero-content{padding-top:40px;padding-bottom:40px;background-color:#EAEAEA;}.panel{margin:40px 0 40px 0;box-shadow:2px 2px 10px rgba(0,0,0,0.2);border:none;background-color:#EAEAEA;}.large-4 img{box-shadow:2px 2px 10px rgba(0,0,0,0.1);}.radius.right.button{color:#000;border:2px #000 solid;border-radius:5px;padding:15px 50px 15px 50px;margin:0;font-size:0.8125em;}@media only screen and (min-width: 64.063em) {.radius.right.button{color:#000;border:2px #000 solid;border-radius:5px;padding:15px 50px 15px 50px;margin-top:25px;font-size:0.8125em;}}@media only screen and (min-width: 40.063em) {.radius.right.button{color:#000;border:2px #000 solid;border-radius:5px;padding:15px 50px 15px 50px;margin-top:25px;font-size:0.8125em;}}.radius.right.button:hover{backgroun//d-color:rgba(0,0,0,0.1);}</style>
+    
     <section class="hero">
       <div class="row">
         <div class="large-12 columns">
           <div class="main-wrapper">
             <h1>GpsdTracking</h1>
-            <h3>OpenSource Gps Tracking Framework</h3>
+            <h3  class="show-for-large-up">OpenSource Gps Tracking Framework</h3>
             <hr>
             <div class="row">
               <div class="large-6 columns large-centered">
@@ -34,7 +36,8 @@
       <div class="row">
         <div class="large-6 columns about-box">
           <div class="black-box">
-            <h2>GpsdTracking Demo</h2>
+            <h2 class="show-for-large-up">GpsdTracking Demo</h2>
+            <h2 class="hide-for-large-up">Demo</h2>
             <p>An example on how to interface GpsdTracking with a WEB app. The demo uses Foundation-4 for pages rendering and LeafletJS for map layers. Geofield data are served through GpsdTracking GeoJson/REST adapter.</p>
             <p>Have fun in creating your own GTS.</p> 
             <p>Fulup</p> 
@@ -48,13 +51,13 @@
     <div class="row">
       
       <div class="large-8 columns about-content">
-        <h4>Demo archi.</h4>
+        <h4>Architure</h4>
         <p>GTSdtracking is an opensource GPS tracking server framework, that enable easy integration of
            multiple GPS trackers in WEB applications. It provides data acquisition drivers for typical
            tracker devices or phone's GPS apps. It handle multiple database backend, and support GeoJSON,
            AIS & NMEA encoding/decoding.</p>
         <p>This demo leverages <a href="http://foundation.zurb.com/">Foundation-5</a> from Zurb foundation for its template and pages rendering .
-           <a href="http://leafletjs.com/">Leaflet</a> for friendly interactive Maps. Geofields data are served by GpsdTracking <a href="http://geojson.org/GeoJson"> GeoJson</a> restfull adapter.</p>
+           <a href="http://leafletjs.com/">Leaflet</a> for friendly interactive Maps. Geofields data are served by GpsdTracking <a href="http://geojson.org"> GeoJson</a> restfull adapter.</p>
         <p></p>
         <p></p>
       </div>
@@ -62,10 +65,10 @@
       <div class="large-4 columns">
         
         <ul class="small-block-grid-2">
-          <li><a href="leaflet-map.html"><img src="http://www.sinagot.net/gpsdtracking/images/gpsdtracking-globalviewx250.png"/></a></li>
-          <li><a href="leaflet-map.html?democmd=track&devid=123456789"><img  src="http://www.sinagot.net/gpsdtracking/images/gpsdtracking-show-trackx250.png"/></a></li>
-          <li><a href="geojson-list.html"><img src="http://www.sinagot.net/gpsdtracking/images/gpstracking-consolex250.png"/></a></li>
-          <li><a href="leaflet-map.html?democmd&devid=123456789=select"><img src="http://www.sinagot.net/gpsdtracking/images/gpsdtracking-selectionx250.png"/></a></li>
+            <li><span data-tooltip aria-haspopup="true" data-options="disable_for_touch:true"  class="has-tip radius round" title="Ajax/GeoJson 'display all'"><a href="leaflet-map.html"><img src="http://breizhme.org/gpsdtracking/images/gpsdtracking-globalviewx250.png"/></a></span></li>
+            <li><span data-tooltip aria-haspopup="true" data-options="disable_for_touch:true" class="has-tip radius round" title="Ajax/GeoJson 'display trace'"><a href="leaflet-map.html?democmd=track&devid=123456789"><img  src="http://breizhme.org/gpsdtracking/images/gpsdtracking-show-trackx250.png"/></a></span></li>
+            <li><span data-tooltip aria-haspopup="true" data-options="disable_for_touch:true" class="has-tip radius round" title="Ajax/GeoJson 'display console'"><a href="geojson-list.html"><img src="http://breizhme.org/gpsdtracking/images/gpstracking-consolex250.png"/></a></span></li>
+            <li><span data-tooltip aria-haspopup="true" data-options="disable_for_touch:true" class="has-tip radius round" title="WebSocket 'Live Display' of moving devices"><a href="leaflet-map.html?democmd=moving"><img src="http://breizhme.org/gpsdtracking/images/gpsdtracking-selectionx250.png"/></a></span></li>
         </ul>
       </div>
           
@@ -76,12 +79,12 @@
     
     <footer>
       <div class="row">
-        <div class="large-6 columns">
-            <p>© Copyright Fulup Ar Foll <i>(feel free to copy & modify, but do not complain for bugs)</i></p>
+        <div class="large-9 columns">
+            <p>© Copyright Fulup Ar Foll <i>(feel free to copy & modify, but do not complain for bugs fix them)</i></p>
         </div>
-        <div class="large-6 columns">
+        <div class="large-3 columns">
           <ul class="inline-list right">
-            <li><a href="http://www.apache.org/licenses/LICENSE-2.0">Terms of Use</a></li>
+            <li><a href="http://www.apache.org/licenses/LICENSE-2.0">Licence & Terms of Use</a></li>
           </ul>
         </div>
       </div>
@@ -90,8 +93,8 @@
     
         <!--  Load Foundation-5 template and GpsdTracking JavaScript Page  -->
         <script> __proto__='jquery'; </script>
-        <script src="http://www.sinagot.net/gpsdtracking/f5/javascripts/vendor/jquery.js"></script>
-        <script src="http://www.sinagot.net/gpsdtracking/f5/javascripts/foundation/foundation.js"></script>
+        <script src="http://breizhme.org/gpsdtracking/f5-546/js/vendor/jquery.js"></script>
+        <script src="http://breizhme.org/gpsdtracking/f5-546/js/foundation.min.js"></script>
   
   <script>
     $(document).foundation();

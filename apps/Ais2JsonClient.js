@@ -55,7 +55,7 @@ var QJcallback = function () {};
 var QJpost  = function (job, callback) {
     
     // decode AIS message ignoring any not AIDVM paquet
-    var ais = new AisEncode (job.toString ('ascii'));
+    var ais = new AisDecode (job.toString ('ascii'));
     var nmea= job.toString ('ascii');
     
     // if message valid and mssi not excluded by --mmsi option
@@ -174,7 +174,12 @@ Ais2Json.prototype.OpenDumpFile = function () {
 };
 
 Ais2Json.prototype.TcpConnect = function () {
-        
+  
+  // start Tcp Client
+  if (this.opts.hostname === undefined) this.opts.hostname='localhost';
+  var host=this.opts.hostname;
+  var port=this.opts.port;
+  
   // Client suceded connected to remote server
   TcpClientConnect = function  () {
     this.ais2json.Debug (1,"Tcp connected");
@@ -195,13 +200,12 @@ Ais2Json.prototype.TcpConnect = function () {
   
   // Remote server close connection
   TcpClientError = function  (err) {
-    console.log ("connection err=%s", err);
+    console.log ("Client connect to tcp://%s:%s err=%s",host, port, err);
     this.end();
     process.exit (-1);
   };
     
-  // start Tcp Client
-  if (this.opts.hostname === undefined) this.opts.hostname='localhost';
+  
   this.tcpClient           = net.createConnection(this.opts.port, this.opts.hostname);
   this.tcpClient.ais2json  = this; // export Debug method inside socket context
   this.tcpClient.setKeepAlive(enable=true, 1000);

@@ -12,6 +12,7 @@ Main features are:
  - support tcp/socket tracker devices: gps103,traccar,nmea, ....
  - support http/gprmc android/iphone: CellTrac, OpenGTSClient, GerGTSTracker
  - support tcp/client mode request AIShub, MarineTraffic, Gpsd/Jason, ....
+ - support Ajax/HTTP and WebSock profile
  - support full set of commands [reset alarm, upload SD, etc ...]
  - global vision of every active devices independently of adapter/protocols
  - support broadcast mode to send a global commands [ie: track all]
@@ -24,8 +25,8 @@ Main features are:
  - flatfile backend generates standard GPX files from input tracking feeds
  Etc.
 
-![GpsdTracking Leaflet Demo](http://www.sinagot.net/gpsdtracking/doc/gpsdtracking-selectionx800.png "Sample of GeoJason/Ajax IU with Leaflet")
- http://www.sinagot.net/gpsdtracking [GpsdTracking Demo HomePage]
+![GpsdTracking Leaflet Demo](http://breizhme.org/gpsdtracking/doc/gpsdtracking-selectionx800.png "Sample of GeoJason/Ajax IU with Leaflet")
+![GpsdTracking leaflet Demo](http://breizhme.org/gpsdtracking/html/leaflet-map.html "GpsdTracking Leaflet Map demo")
 
 GpsdTracking is designed to make as simple as possible integration of new
 tracking devices/backends. All specific parts or devices/backend are exported
@@ -53,7 +54,8 @@ References
     - https://github.com/freshworkstudio/gps-tracking-nodejs
     - http://www.catb.org/gpsd/
     and many others.
-                      
+![GpsdTracking WebSocket Demo] (http://breizhme.org/gpsdtracking/doc/gpsdtracking-websockx800.png "Sample of WebSock animation")
+![GpsdTracking WebSocket Demo](http://breizhme.org/gpsdtracking/html/leaflet-map.html?democmd=moving "GpsdTracking Leaflet Map demo")
 ---------------------------------------------------------------------
     Quick Start ?
 ---------------------------------------------------------------------
@@ -77,24 +79,23 @@ References
 ---------------------------------------------------------------------
 As today demo works in IE9,Firefox,Chrome,... but fail on older version of IE
 
-![GpsdTracking Demo Homepage](http:www.sinagot.net:4080 "GpsdTracking Oneline Demo")
- http://www.sinagot.net/gpsdtracking [GpsdTracking Demo HomePage] 
+![GpsdTracking Demo Homepage](http://breizhme.org/gpsdtracking "GpsdTracking Demo Home Page")
 
 Moving forward you can access GpsdTracking demo services on following ports.
 
-       tcp://sinagot.net:4000                // Telnet control console
-       http://sinagot.net:4080/geojson.rest  // Ajax GeoJson/Pjson REST API
-       http://sinagot.net:4020/              // OpenGPRMC phone apps [see here after CellTrack notes]
+       tcp://breizhme.org:4000                // Telnet control console
+       http://breizhme.org:4080/geojson.rest  // Ajax GeoJson/Pjson REST API
+       http://breizhme.org:4020/              // OpenGPRMC phone apps [see here after CellTrack notes]
 
-       tcp://sinagot.net:4001                // Ais Hub Simulator [connect OpenCPN on this port]
-       tcp://sinagot.net:4002                // NMEA single GPRMC feed
-       tcp://sinagot.net:4003                // NMEA single vessel AIVDM feed
+       tcp://breizhme.org:4001                // Ais Hub Simulator [connect OpenCPN on this port]
+       tcp://breizhme.org:4002                // NMEA single GPRMC feed
+       tcp://breizhme.org:4003                // NMEA single vessel AIVDM feed
 
-       tcp://sinagot.net:4010                // Adapter waiting for GPS103/TK102 data
+       tcp://breizhme.org:4010                // Adapter waiting for GPS103/TK102 data
 
 
- ![GpsdTracking Demo](http://www.sinagot.net/gpsdtracking/doc/gpstracking-homex800.png "demo Home page") 
- http://www.sinagot.net/gpsdtracking [GpsdTracking Demo HomePage] 
+ ![GpsdTracking Demo](http://breizhme.org/gpsdtracking/doc/gpstracking-homex800.png "demo Home page") 
+ http://breizhme.org/gpsdtracking [GpsdTracking Demo HomePage] 
  ------------------------
   Dummy backend 
 ------------------------
@@ -112,11 +113,11 @@ good candidate for testing adapters.
     * dev info xxxxxx
     * db search xxxxx 10 [display last 10 positions of device xxxx]
 
-![GpsdTracking CellTracPro](http://www.sinagot.net/gpsdtracking/doc/celltrack-doublex800.png "CellTrac Free/Pro Android") 
+![GpsdTracking CellTracPro](http://breizhme.org/gpsdtracking/doc/celltrack-doublex800.png "CellTrac Free/Pro Android") 
  
 Note: OpenGPRMC support both CellTrac Free & Pro version. In theory
        any other GPRMC over HTTP should work. Pro version support group and device map.
-       Celltrack URL 'http://sinagot.net:4020/' [don't forget last /]
+       Celltrack URL 'http://breizhme.org:4020/' [don't forget last /]
 ------------------------
   FlatFile backend 
 ------------------------
@@ -155,7 +156,7 @@ Note: OpenGPRMC support both CellTrac Free & Pro version. In theory
       -- select * from devices;
       -- select * from positions;
 
-![GpsdTracking Control Console](http://www.sinagot.net/gpsdtracking/doc/gpsdtracking-control-consolex800.png "Telnet Control Console")
+![GpsdTracking Control Console](http://breizhme.org/gpsdtracking/doc/gpsdtracking-control-consolex800.png "Telnet Control Console")
 
 ------------------------------------------------
 Typical scenario from telnet console using MySQL
@@ -226,7 +227,7 @@ Typical scenario from telnet console using MySQL
      Vessel are view as devices
      MMSI is used in place of IMEI
 --------------------------------------------------------------------
-![GpsdTracking Ais Simulator](http://www.sinagot.net/gpsdtracking/doc/opencpn-simulatorx800.png "Ais Simulator")
+![GpsdTracking Ais Simulator](http://breizhme.org/gpsdtracking/doc/opencpn-simulatorx800.png "Ais Simulator")
 
 Simulation
   Make your GPX route with OpenCPN or any other application your like

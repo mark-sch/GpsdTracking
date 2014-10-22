@@ -59,7 +59,7 @@ function DevListCB (data) {
 function GetDevList() {
    
   // Select direct Ajax/Json profile if using GpsdTracking/HttpAjax server otherwise use JsonP
-  if (HTTP_AJAX_CONFIG.JSONP) var gpsdApi = "http://sinagot.net:4080/geojson.rest?jsoncallback=?";
+  if (HTTP_AJAX_CONFIG.JSONP) var gpsdApi = "http://breizhme.org:4080/geojson.rest?jsoncallback=?";
             else  var gpsdApi = "/ajax/geojson.rest?";
   var gpsdRqt = 
     {key   : HTTP_AJAX_CONFIG.GPSD_API_KEY // user authentication key

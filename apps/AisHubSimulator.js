@@ -23,7 +23,7 @@
  * It scan ../samples/simulator directory, searches for .gpx files,
  * Starts one as NMEA feed and any others has AIS targets.
  * Shipname and other simulator parameters are built from filename, that have
- * to respect "shipname-mmsi-speed-tcpport.gpx" patern.
+ * to respect "shipname-mmsi-sog-tcpport.gpx" patern.
  * 
  * Ais Simulator support both server and client mode. Its simulates real life
  * AIS/GPS feed (boats navigation instruments, AIShub, MarineTraffic, ....)
@@ -52,7 +52,7 @@
 // ------------------ Global options -------------------------------------------
    GPX_DIR= "/../samples/simulator/"; //where to find GPX routes
    SVC_POR= 4001;                     // what ever please you
-   DBG_LEV= 4;                        // from 0 to 9
+   DBG_LEV= 1;                        // from 0 to 9
    AIS_TIC= 10;                       // ais refresh status report rate
    SCK_PSE= 500;                      // wait 0.5s in between each messages
 // =============================================================================
@@ -121,15 +121,15 @@ MakeDefaults.prototype.Callsign = function () {
 };
 
 MakeDefaults.prototype.Speed = function () {
-    var speed;
+    var sog;
     if (this.args[2] !== undefined) {
-       speed =  parseInt (this.args[2]);
-       if (speed === 0)  speed = 5 + Math.random() * 30;
+       sog =  parseInt (this.args[2]);
+       if (sog === 0)  sog = 5 + Math.random() * 30;
     } else {
-        speed = 5 + Math.random() * 30;
+        sog = 5 + Math.random() * 30;
     }
-    this.speed=speed;
-    return (speed);
+    this.sog=sog;
+    return (sog);
 };
 MakeDefaults.prototype.Proto = function () {
     if (this.mmsi === 0) {
@@ -141,8 +141,8 @@ MakeDefaults.prototype.Proto = function () {
 };
 MakeDefaults.prototype.Len = function () {
     var len;
-    if (this.speed <  20) len = 10 + Math.random() * 20;
-    if (this.speed >= 20) len = 20 + Math.random() * 100;
+    if (this.sog <  20) len = 10 + Math.random() * 20;
+    if (this.sog >= 20) len = 20 + Math.random() * 100;
     this.len=len;
     return (len);
 };
@@ -164,11 +164,11 @@ MakeDefaults.prototype.Uway = function () {
 
 MakeDefaults.prototype.Cargo = function () {
     var cargo=70;
-    if (this.len > 15  &&  this.speed <15)  cargo = 30;  // fishing
-    if (this.len < 15  &&  this.speed <10)  cargo = 36;  // sailling
-    if (this.len < 15  &&  this.speed <15)  cargo = 37;  // pleasure
-    if (this.len >= 15 &&  this.speed >=20)  cargo = 70;  // cargo
-    if (this.len >= 15 &&  this.speed >=30) cargo = 60; // passenger
+    if (this.len > 15  &&  this.sog <15)  cargo = 30;  // fishing
+    if (this.len < 15  &&  this.sog <10)  cargo = 36;  // sailling
+    if (this.len < 15  &&  this.sog <15)  cargo = 37;  // pleasure
+    if (this.len >= 15 &&  this.sog >=20)  cargo = 70;  // cargo
+    if (this.len >= 15 &&  this.sog >=30) cargo = 60; // passenger
     this.cargo=cargo;
     return (this.cargo);
 };
@@ -267,7 +267,7 @@ function ListenEvents (simulator) {
             case 3:  // class A position report
             case 18: // class B position report
                 
-                Debug (3, "## Ais mmsi:type:3,18 [%s] Lon=%d Lat=%s Speed=%s Bearing=%s", aisrqt.mmsi, MathDec(aisrqt.lon,4), MathDec(aisrqt.lat) , aisrqt.sog, aisrqt.cog);
+                Debug (3, "## Ais type:3,18 mmsi:[%s] Lon=%d Lat=%s Speed=%s Bearing=%s", aisrqt.mmsi, MathDec(aisrqt.lon,4), MathDec(aisrqt.lat) , aisrqt.sog, aisrqt.cog);
                 break;
             case 5:
             case 24:
@@ -281,8 +281,8 @@ function ListenEvents (simulator) {
     };
      // Events on action refused by tracker adapter 
     EventHandlerGprmc = function(job, nmea){ // this.event.emit ("gprmc", job, ais.nmea);
-        // job={lon=xx, lat=xx, speed=xx, bearing=xxx}
-        Debug (3, "## Gprmc Lon=%d Lat=%s Speed=%s Bearing=%s", MathDec(job.lon), MathDec(job.lat), job.speed, job.bearing);
+        // job={lon=xx, lat=xx, sog=xx, bearing=xxx}
+        Debug (3, "## Gprmc Lon=%d Lat=%s Speed=%s Bearing=%s", MathDec(job.lon), MathDec(job.lat), job.sog, job.cog);
         // post new nmea paquet to the queue
         QJhandle.push (nmea, QJcallback);
     };
@@ -330,7 +330,7 @@ for (ship in gpxroutes) {
     var args= ship.split ("-");
     var shipname = args[0];
     var mmsi     = parseInt (args[1]);
-    var speed    = parseInt (args[2]);
+    var sog    = parseInt (args[2]);
     
     getdefault= new MakeDefaults(ship, args);
     
@@ -338,7 +338,7 @@ for (ship in gpxroutes) {
     opt[ship].gpxfile    = gpxroutes[ship];       // gps filename path
     opt[ship].mmsi       = getdefault.Mmsi();     // from filename or getdefault
     opt[ship].shipname   = getdefault.Shipname();
-    opt[ship].speed      = getdefault.Speed();    // getdefault 0 to 50knts
+    opt[ship].sog      = getdefault.Speed();    // getdefault 0 to 50knts
     opt[ship].tic        = getdefault.Tic();       // let's update AIS every xxxs
     opt[ship].debug      = DBG_LEV;               // debug level
     opt[ship].proto      = getdefault.Proto();    // Ais if MMSI set

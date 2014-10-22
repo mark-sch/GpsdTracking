@@ -111,7 +111,7 @@ ParseArgs = function (command, args) {
         ]
         ,'OPTION' : [["EOL"      , "return (this);"]
            ,['GPX TEX'  ,"this.gpxfile=$2;"]
-           ,['SPD TEX'  ,"this.speed=parseFloat($2);"]
+           ,['SPD TEX'  ,"this.sog=parseFloat($2);"]
            ,['TIC TEX'  ,"this.tic=parseInt($2);"]
            ,['PRO TEX'  ,"this.proto=$2;"]
            ,['HOS TEX'  ,"this.host=$2"]
@@ -153,9 +153,9 @@ ParseArgs = function (command, args) {
     if (this.opts.help)  {
         console.log ("----------------------------------------------------------------------------------------------------------");
         console.log ("## Client:  %s --gpxfile=./your-gpxfile.gpx [--proto=gprmc] [--speed=12] [--tic=2] \\",bin);
-        console.log ("            [--srvmod | --hostname=localhost] [port=5000] \\");
+        console.log ("            [--srvmod | --hostname=localhost] [--port=5000] \\");
         console.log ("            [--dumpgpxfile=xxx] [--loopwait=timeout] [--debug=4]");
-        console.log ("## Server:  %s --gpxfile=./your-gpxfile.gpx [--proto=ais]  [--speed=6]  [--tic=30] \\", bin);
+        console.log ("## Server:  %s --gpxfile=./your-gpxfile.gpx [--proto=aivdm]  [--speed=6]  [--tic=30] \\", bin);
         console.log ("            [--srvmod | --hostname=localhost] [port=5000] [--debug=4]\\");
         console.log ("            [--shipname=xxx] [--cargo=xxx] [--callsign=xxx] [--underway=xx] [--width=xxx] [--length=xxx]");
         console.log ("## Ex-Aivdm: node %s --gpxfile=../samples/gpx-files/Quiberon-BelleIle.gpx \\", bin);

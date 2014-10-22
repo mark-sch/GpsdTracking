@@ -42,22 +42,22 @@
 GpsDaemon = require("../lib/GpsdDaemon"); 
 
 // Sample for MySql option (Warning: you have to create your base+tables first)
-var DummyDemo = {
-    backend    : "Dummy",         // backend file ==> Dummy-backend.js 
-    name       : "GpsdDummyDemo", // friendly service name [default Gpsd-Track]
-    inactivity : 900,             // remove device from active list after xxxs inactivity [default 600s]
-    jsonport   : 4030,            // server port to replay in JSON human readable incomming data
-    aisport    : 4040,            // Same thing but in AIS/AIVDM format
-    sockpause  : 250,             // delay in ms in beetween each replay data [0=nowait]
-    storesize  : 50,              // size of postition/device kept in ram for "db search" command
-    debug      : 1,               // debug level 0=none 9=everything
+var DummyDemo = 
+    {backend    : "Dummy"         // backend file ==> Dummy-backend.js 
+    ,name       : "GpsdDummyDemo" // friendly service name [default Gpsd-Track]
+    ,rootdir    : "http://breizhme.org/gpsdtracking/" // dummy backend return device url image after fake authentication
+    ,inactivity : 900             // remove device from active list after xxxs inactivity [default 600s]
+    ,sockpause  : 250             // delay in ms in beetween each replay data [0=nowait]
+    ,storesize  : 50              // size of postition/device kept in ram for "db search" command
+    ,debug      : 1               // debug level 0=none 9=everything
     
-    "services"    :  {  // WARNING: NO service network port SHALL conflict
+    ,"services"    :    // WARNING: NO service network port SHALL conflict
         /*
             info     : 'a friendly name for your service'
             adapter  : 'xxxx for adapter file = ./adapter/xxxx-adapter.js'
-            port     : 'tcp port for both service server & client mode'
+            port     : 'tcp port for both service server'
             hostname : 'remote service provider hostname  [default localhost]'
+            remport : 'remote tcp feed port'
             timeout  : 'reconnection timeout for consumer of remote service [default 120s]'
             imei     : 'as standard nmea feed does not provide imei this is where user can provide a fake one'
             maxspeed : 'any thing faster is view as an invalid input [default=55m/s == 200km/h]
@@ -71,8 +71,9 @@ var DummyDemo = {
                   to see event on ignoring data because of distance/speed computation.
         */
         // this controle console, you probably want it hyden behind your firewall
-         Telnet   : {info: "Telnet Console"  , adapter: "TelnetConsole" , port:4000}
-        ,Httpd    : {info: "Minimalist HTTPd", adapter: "HttpAjax"      , port:4080, debug:5, cors:true}     // send Allow-Origin header
+        {Telnet   : {info: "Telnet Console"  , adapter: "TelnetConsole" , port:4000}
+        ,Httpd    : {info: "Minimalist HTTPd", adapter: "HttpAjax"      , port:4080, debug:5}
+        ,WebSock  : {info: "Websock service" , adapter: "WebSockTraffic", port:4081, debug:5} 
          
         // following apaters are TCP servers and wait for clients to connect
         ,Gps103   : {info: "Tk102 Gps103"    , adapter: "Gps103Tk102"   , port:4010} 
@@ -83,8 +84,8 @@ var DummyDemo = {
         ,Celltrac : {info: "CellTrac Android", adapter: "GtcGprmcDroid" , port:4020, debug:5} // OpenGPRMC
 
         // new adapters are clients [probably for test load generation only]
-        ,AisTcp   : {info: "Ais Hub Feed"    , adapter: "AisTcpFeed"    , hostname: "sinagot.net"  , port:4001, timeout:60, mindist:500}
-        ,RemGps   : {info: "Gps Over Tcp"    , adapter: "NmeaTcpFeed"   , hostname: "sinagot.net"  , port:4001, timeout:60, mmsi:123456789, mindist:500}
+        ,AisTcp   : {info: "Ais Hub Feed"    , adapter: "AisTcpFeed"    , hostname: "sinagot.net"  , remport:4001, timeout:60, mindist:500}
+        ,RemGps   : {info: "Gps Over Tcp"    , adapter: "NmeaTcpFeed"   , hostname: "sinagot.net"  , remport:4001, timeout:60, mmsi:123456789, mindist:500}
     }
 };
 

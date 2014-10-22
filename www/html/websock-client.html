@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html>
+<head>
+<style>
+body {
+font-family: Tahoma, Geneva, sans-serif;
+}
+div {
+display: inline;
+}
+</style>
+<script>
+
+function ConnectWS () {
+  var ws;
+  
+  function DisplayData(message) {
+    //console.log ("message=%s",message);  
+    var data= JSON.parse (message);  
+   
+    switch (data.type) {
+        case 0: // welcome message
+            var div = document.createElement("div");
+            div.innerHTML = '<i> ' + message + ' </i><br>';
+	    document.body.appendChild(div);
+            break;
+        case 1: // authentication
+            var div = document.createElement("div");
+            div.innerHTML = '<b> ' + message + ' </b><br>';
+	    document.body.appendChild(div);
+            break;
+        case 2: // position update
+            var div = document.createElement("div");
+            div.innerHTML = message + ' <br>';
+	    document.body.appendChild(div);
+        break;
+        case 3: // quit
+            var div = document.createElement("div");
+            div.innerHTML = '<strong>' + message + '</strong><br>';
+	    document.body.appendChild(div);
+        break;
+        default:
+           console.log ("HOOP: unknown message type: %s [%s]", data.type, JSON.stringify(data));
+    }
+};
+
+    var host = window.document.location.host.replace(/:.*/, '');
+    try {
+        ws = new WebSocket('ws://' + host + ':4081' + '/wssock?API_KEY=123456789');
+        ws.onmessage = function (event) {
+        DisplayData (event.data);
+    };
+    } catch (err) {
+            console.log ("** ERROR: Web Socket : %s:4081 err=%s", host, err);
+            var div = document.createElement("div");
+            div.innerHTML = "** ERROR: Web Socket"  + err;
+	    document.body.appendChild(div); 
+    }
+   
+};
+
+window.addEventListener("load", ConnectWS);
+
+
+</script>
+</head>
+<body>
+<strong>Demo WebSock</strong><br>
+
+</body>
+</html>

@@ -1,7 +1,7 @@
 {
   "name" : "gpsdtracking",
   "description" : "GTSdtracking is an opensource GPS tracking server framework",
-  "version" : "0.4.1",
+  "version" : "0.4.3",
   "author" : {
     "name" : "Fulup Ar Foll",
     "email" : "fulup@fridu.net",
@@ -14,13 +14,14 @@
   "bin" : {
     "DeviceSimulator" : "./apps/DeviceSimulator.js"
   },
-  "dependencies" : {
-    "async" : "*",
-    "traceback" : "*",
-    "jison" : "*",
-    "mysql" : "*",
-    "sgeo" : "*",
-    "xml2js" : "*"
+  "dependencies" : 
+    {"async" : "*"
+    ,"traceback" : "*"
+    ,"jison" : "*"
+    ,"mysql" : "*"
+    ,"sgeo" : "*"
+    ,"xml2js" : "*"
+    ,"ws"     : "*"
   },
   "repository" : {
     "type" : "git",

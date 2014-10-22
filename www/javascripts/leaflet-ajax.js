@@ -8,6 +8,14 @@
  * http://leafletjs.com/examples/geojson.html
  * http://leafletjs.com/examples/sample-geojson.js
  * http://bcdcspatial.blogspot.fr/2012/01/onlineoffline-mapping-map-tiles-and.html
+ * https://gist.github.com/ejh/2935327#file-leaflet-button-control-js
+ * 
+ * This file propose 3 independant routines.
+ *  - GetDevList:  Ajax/GeoJson FeaturesCollection query request all loged devices
+ *  - GetDevTrack: Ajax/GeoJson GeometriesCollection request current track for a given device
+ *  - GetDevMov:   WebSock/Json display and move device on the map dynamically
+ *  The tree fonctions are called from the same HTML page leaflet-map.html
+ *  selection if done from query cmd=xxxx value.
  * 
  */
 
@@ -16,20 +24,11 @@
  * To change this license header, choose License Headers in Project Properties.
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
- * 
- * Refrence: https://gist.github.com/ejh/2935327#file-leaflet-button-control-js
  */
  
 
-// sample of GeoJson structure as returned by server. For validation http://geojsonlint.com/
-/*var sampleResponseList=
-    {"type":"FeatureCollection"
-    ,"features":[
-        {"type":"Feature"
-        ,"geometry":{"type":"Point","coordinates":[-2.956468656997125,47.39691989478658],"sog":10.3,"cog":175.1,"age":33}
-        ,"properties":{"type":"Properties","id":"123456789","name":"Fulup-HR37","title":"Position (-2.9565,47.3969)","url":"localhost:4080/geojson.rest?&key=123456789&cmd=track&devid=123456789&llist=10&"},"device":{"type":"Device","class":"Sailer","model":1,"call":"1-123456789","img":"http://www.sinagot.net/gpsdtracking/demo/images/Fulup-HR37x250.jpg","url":"http://www.sinagot.net/gpsdtracking/demo/devices/Fulup-HR37.html"}},{"type":"Feature","id":"147258369","geometry":{"type":"Point","coordinates":[-3.1057866666666665,47.36420833333333],"sog":35.5,"cog":347.70000000000005,"age":1},"properties":{"type":"Properties","name":"Momo-Yatch","title":"Position (-3.1058,47.3642)","url":"localhost:4080/geojson.rest?&key=123456789&cmd=track&devid=147258369&llist=10&"},"device":{"type":"Device","class":"Yatch","model":3,"call":"3-147258369","img":"http://www.sinagot.net/gpsdtracking/demo/images/Momo-Yatchx250.jpg","url":"http://www.sinagot.net/gpsdtracking/demo/devices/Momo-Yatch.html"}},{"type":"Feature","id":"159847387","geometry":{"type":"Point","coordinates":[-2.894015,47.51636833333333],"sog":10.5,"cog":337.8,"age":5},"properties":{"type":"Properties","name":"Xavier-Ferry","title":"Position (-2.8940,47.5164)","url":"localhost:4080/geojson.rest?&key=123456789&cmd=track&devid=159847387&llist=10&"},"device":{"type":"Device","class":"Speeder","model":6,"call":"6-159847387","img":"http://www.sinagot.net/gpsdtracking/demo/images/Xavier-Ferryx250.jpg","url":"http://www.sinagot.net/gpsdtracking/demo/devices/Xavier-Ferry.html"}},{"type":"Feature","id":"179346827","geometry":{"type":"Point","coordinates":[-2.94171,47.279175],"sog":22.8,"cog":32.4,"age":0},"properties":{"type":"Properties","name":"Sinagot-Pesketour","title":"Position (-2.9417,47.2792)","url":"localhost:4080/geojson.rest?&key=123456789&cmd=track&devid=179346827&llist=10&"},"device":{"type":"Device","class":"Fisher","model":2,"call":"2-179346827","img":"http://www.sinagot.net/gpsdtracking/demo/images/Sinagot-Pesketourx250.jpg","url":"http://www.sinagot.net/gpsdtracking/demo/devices/Sinagot-Pesketour.html"}},{"type":"Feature","id":"258369147","geometry":{"type":"Point","coordinates":[-2.9942366666666667,47.468783333333334],"sog":17.2,"cog":167.5,"age":7},"properties":{"type":"Properties","name":"Mael-Ferry","title":"Position (-2.9942,47.4688)","url":"localhost:4080/geojson.rest?&key=123456789&cmd=track&devid=258369147&llist=10&"},"device":{"type":"Device","class":"Ferry","model":4,"call":"4-258369147","img":"http://www.sinagot.net/gpsdtracking/demo/images/Mael-Ferryx250.jpg","url":"http://www.sinagot.net/gpsdtracking/demo/devices/Mael-Ferry.html"}},{"type":"Feature","id":"321654987","geometry":{"type":"Point","coordinates":[-2.91836,47.38233833333334],"sog":9.700000000000001,"cog":321.6,"age":13},"properties":{"type":"Properties","name":"Vero-Cargo","title":"Position (-2.9184,47.3823)","url":"localhost:4080/geojson.rest?&key=123456789&cmd=track&devid=321654987&llist=10&"},"device":{"type":"Device","class":"Cargo","model":5,"call":"5-321654987","img":"http://www.sinagot.net/gpsdtracking/demo/images/Vero-Cargox250.jpg","url":"http://www.sinagot.net/gpsdtracking/demo/devices/Vero-Cargo.html"}
-       },{"type":"Feature","id":"456789012","geometry": "......blablabla ...."}]};
-*/
+var TRACE_SIZE=20;  // number of points in trace
+var VECTOR_SIZE=4;  // speed/heading direction vector length
 
 var map;
 var GPSD_API_KEY; // set by server at page load or set manually for demo/debug
@@ -241,6 +240,210 @@ function GetDevTrack(devid) {
    $.getJSON(gpsdApi,gpsdRqt, DevTrackCB);   
 }
 
+
+// this object hold device on map parameters
+DeviceOnMap = function(devid) {
+      this.trace=[];  // keep trace of device trace on xx positions
+      this.count=0;   // number of points created for this device
+}; // end device on Map
+  
+DeviceOnMap.prototype.SetDeco= function () {
+        switch (this.model) {
+        case 01: 
+            this.color= 'purple';
+            this.icon = 'anchor';
+            break;
+        case 02:
+            this.icon = 'anchor';
+            this.color= 'orange';
+            break;
+        case 03: 
+            this.icon = 'cab';
+            this.color= 'red';
+            break;
+        case 04: 
+            this.icon = 'anchor';
+            this.color= 'green';
+            break;
+        case 05:
+            this.icon = 'plus-square';
+            this.color= 'cadetblue';
+            break;
+        case 06:
+            this.icon = 'anchor';
+            this.color= 'darkpuple';
+            break;
+        default: 
+            this.color= 'darkred';
+            this.icon = 'flag';
+            break;
+       }
+};
+  
+    // Create an icon based on device color
+DeviceOnMap.prototype.GetIcon=function () {
+        // http://fortawesome.github.io/Font-Awesome/icons/
+        var redIcon = L.AwesomeMarkers.icon(
+            {icon: this.icon
+            ,title:  'Name=' + this.name + ' [' + this.devid + ']'       
+            ,markerColor: this.color
+            ,iconSize: [19, 52]
+            ,prefix: 'fa'
+            ,spin: false
+        });
+        return (redIcon);
+};
+    
+    // Create a marker from device object and plate in on the map
+DeviceOnMap.prototype.CreateMarker= function (data) {
+        this.SetDeco();
+        var marker=L.marker([data.lat,data.lon],
+            {icon: this.GetIcon()
+            ,title:  'Name=' + this.name + ' [' + this.devid + ']'
+            ,clickable: true
+            ,opacity: 0.8
+        }).addTo(map);
+    
+        var info=  "devid=" +data.devid+"<br>Name=" + this.name +"</b><img src="+data.img+" width='250' >";  
+        marker.bindPopup("<center>"+info+"</center>");
+        
+        return (marker);
+};
+   
+DeviceOnMap.prototype.CreateCircle= function () {
+      var marker= L.circleMarker([this.lat, this.lon], 
+         {radius: 2
+         ,fillColor: this.color
+         ,color: '#000'
+         ,weight: 1
+         ,opacity: 1
+         ,riseOnHover: true
+         ,fillOpacity: 0.8
+    	 }).addTo(map);
+      var info= "devid="+this.devid +" name=" +this.name+"<br>lat:"+this.lat.toFixed(4) +" lon:" +this.lon.toFixed(4)
+              + " spd:" + this.sog.toFixed(2)+ " hdg:"+ this.cog.toFixed(2)+"<br>" +  new Date();
+      marker.bindPopup("<center>"+info+"</center>");
+      return (marker);
+};
+  
+   // build a vector base on device heading & speed
+DeviceOnMap.prototype.CreateVector =function () {
+       if (this.vector !== undefined) map.removeLayer (this.vector);
+      
+       // Create a vector lenght from this speed
+       var len=VECTOR_SIZE*this.sog; 
+
+       // compute x/y direction depending on device heading
+       if (this.cog < 180)  sinDir=1; else sinDir=-1;
+       if (this.cog > 270 && this.cog < 90 )   cosDir=1; else cosDir=-1;
+       // pts (0.0) is left uppercorner
+       var pts= map.latLngToContainerPoint ([this.lat, this.lon]);
+       var newx= parseInt (pts.x + (Math.sin(this.cog / 180)*len*sinDir));
+       var newy= parseInt (pts.y + (Math.cos(this.cog* Math.PI / 180)*len*cosDir));
+       
+       this.vector=L.polyline ([[this.lat, this.lon], map.containerPointToLatLng(L.point(newx,newy))]
+                  , {clickable:false, color: this.color, opacity:0.7, dashArray:[3, 10]}).addTo(map);
+       
+};
+    
+    // if no marker create on, else move it and update trace
+DeviceOnMap.prototype.UpdatePos = function (data) {
+        
+        if (this.marker === undefined) {
+            this.marker = this.CreateMarker(data);
+        } else {
+            // move data marker to new location
+            this.marker.setLatLng ([data.lat, data.lon]);
+            // add a new point to trace
+            var current= this.count; 
+            var next   = ++this.count % TRACE_SIZE;
+            this.trace[current]= this.CreateCircle ();
+            // clear old trace point if needed
+            if (this.trace[next] !== undefined) map.removeLayer (this.trace[next]);  
+        }
+        for (var slot in data) (this[slot] = data[slot]);
+        
+        var info= "devid=<b>" + data.devid + "</b><br>Name=<b>" + this.name + "</b><img src=" + this.img + " width='250' >"
+                + "pos:<b>" + this.lat.toFixed(4) + "</b>,<b>" + this.lon.toFixed(4) 
+                + "</b> sog:<b>" + this.sog.toFixed(2)+ "</b> hdg<b>:"+ this.cog.toFixed(2) + "</b>";
+      
+        this.marker.bindPopup("<center>"+info+"</center>");
+
+        this.CreateVector();
+};
+    
+DeviceOnMap.prototype.UpdateInfo= function(data) {
+        for (var slot in data) (this[slot] = data[slot]);
+};
+    
+DeviceOnMap.prototype.CleanTrace=function () {
+        for (var slot in this.trace) {
+            if (this.trace [slot] !== undefined) {
+                map.removeLayer(this.trace [slot]);
+            }
+        }
+};
+  
+// this routine is called to display moving devices with a websocket
+function GetDevMov() {
+ 
+  var activeDevs=[]; // hash table for devices key=devid
+  var ws;
+  
+  function  DisplayCallback(message) {
+   // console.log ("message=%s",message);  
+    var data= JSON.parse (message);  
+   
+    switch (data.type) {
+        case 0: // initial messages get both auth & position info
+           activeDevs [data.devid]= new DeviceOnMap (data.devid);
+           activeDevs [data.devid].UpdateInfo(data)
+           activeDevs [data.devid].UpdatePos (data);
+           break;
+            
+        case 1: // authentication 
+            if (activeDevs [data.devid] === undefined) {
+                activeDevs [data.devid]= new DeviceOnMap (data.devid);
+            }
+            activeDevs [data.devid].UpdateInfo (data);
+            break;
+            
+        case 2: // position update
+            if (activeDevs [data.devid] === undefined) {
+                activeDevs [data.devid]= new DeviceOnMap (data.devid);
+            }
+            activeDevs [data.devid].UpdatePos (data);
+            break;
+            
+        case 3: // data quit let's clean the place
+            if (activeDevs [data.devid] !== undefined) {
+                activeDevs [data.devid].CleanTrace();
+                delete activeDevs [data.devid];
+            }
+            break;
+        default:
+           console.log ("HOOP: unknown message type: %s [%s]", data.type, JSON.stringify(data));
+       }
+    }; // end DisplayCallback
+    
+    // If this is not our server, jump directly to a wellknown fixed wssock provider
+    if (HTTP_AJAX_CONFIG.JSONP)  var wsUri = 'ws://sinagot.net:4081/wssock?API_KEY=123456789';
+    else  {
+        var host = window.document.location.host.replace(/:.*/, '');
+        var wsUri = "ws://" + host + "/websock?API_KEY=123456789";
+    }
+      
+    try {
+        ws = new WebSocket(wsUri);
+    } catch (err) {
+        console.log ("## Hoops: Websock URI=%s  Err=%s", wsUri, err);
+    }
+    if (ws !== undefined) ws.onmessage = function (event) {
+        DisplayCallback (event.data);
+    };
+} // end DisplayDevMov
+
+
 function DisplayDevMap() {
 
   // For more option Check http://leaflet-extras.github.io/leaflet-providers/preview/index.html
@@ -264,18 +467,23 @@ function DisplayDevMap() {
        if (action[0]==='devid')   demoid=action[1];
    }
 
-    // compute screen size
-    var mapzone=document.getElementById('PageMapDiv');
-    if (window.innerWidth > 1280) {
+   function resizeMap () {
+      // compute screen size 
+      var mapzone=document.getElementById('PageMapDiv');
+      if (window.innerWidth > 1280) {
         mapzone.style.width=(window.innerWidth * 0.7)+'px';;
-        mapzone.style.height=(window.innerHeight * 0.8)+'px';
-    } else {
-        mapzone.style.width=(window.innerWidth * 0.9)+'px';;
-        mapzone.style.height=(window.innerHeight * 0.9)+'px';
+        mapzone.style.height=(window.innerHeight * 0.75)+'px';
+      } else {
+        mapzone.style.left='2%';
+        mapzone.style.width=(window.innerWidth * 0.95)+'px';;
+        mapzone.style.height=(window.innerHeight * 0.95)+'px';
+      } 
     }
+    resizeMap (); 
+    window.onresize = resizeMap;
     
     // Create a map  center on Golf of Morbihan 
-    map = L.map('PageMapDiv').setView ([47.501, -2.975],12);
+    map = L.map('PageMapDiv').setView ([47.45, -2.975],11);
     
     if (ActiveTiles['OpenStreet']) { // easy case no API/Key no registration
        ActiveTiles['OpenStreet'] = openstreet = L.tileLayer('http://{s}.tile.osm.org/{z}/{x}/{y}.png');
@@ -342,6 +550,9 @@ function DisplayDevMap() {
               break;
         case 'select':
               GetDevList(demoid);
+              break;
+        case 'moving':
+              GetDevMov();
               break;
         default : 
    

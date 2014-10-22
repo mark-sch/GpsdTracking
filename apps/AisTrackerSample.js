@@ -63,7 +63,7 @@ ListenEvents = function (daemon) {
     };	
     // Events successful process by tracker adapter
     EventHandlerAccept = function (device, data){
-        console.log ("#%d- Action Imei:[%s] Name:[%s] Cmd:[%s] Lat:%d Lon:%d Speed=%d", count, device.imei, device.name, data.cmd, data.lat, data.lon, data.speed);
+        console.log ("#%d- Action Imei:[%s] Name:[%s] Cmd:[%s] Lat:%d Lon:%d Speed=%d", count, device.imei, device.name, data.cmd, data.lat, data.lon, data.sog);
     };
      // Events on action refused by tracker adapter
     EventHandlerError = function(status, info, id, msg){

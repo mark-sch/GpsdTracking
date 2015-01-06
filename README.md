@@ -1,6 +1,12 @@
 GpsdTracking
 ==============
 
+This repository is end of live and has been replace by GeoGate https://github.com/fulup-bzh/GeoGate
+
+GeoGate has the same functionnlities, is more modular and include new componant as MongoDB. The only
+reason for this repository to remains is the Demo, that has not been ported yet.
+
+
 GTSdtracking is an opensource GPS tracking server framework, that enable easy
 integration of multiple GPS trackers in WEB applications. It provides data
 acquisition drivers for typical tracker devices or phone's GPS apps.
